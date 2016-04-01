@@ -59,10 +59,10 @@ The x, y, width and height values for each text label can be specified as a perc
 
 ## Invocation
 When you have a card design (the JSON file and images) and a deck (a named directory with text files in it), you can generate the deck grid for Tabletop Sim by invoking the script.
-Let's say I've come up with a set of new white cards with animal themes for CaH, written a JSON file (`cah-white.json`) and created the directory `cah-animals/` with a text file in it.
+Let's say I've come up with a set of new white cards with animal themes for CaH, written a JSON file (`cah-white.json`) and created the deck directory (`cah-animals/`) with a text file in it.
 
 ```bash
-$ cardcinogen.py --template cah-white --deck cah-animals --output cah_animal_deck
+$ cardcinogen.py --template cah-white.json --deck cah-animals --output cah_animal_deck
 ```
 
 The script will generate one or more jpeg images (there can be a maximum of 69 cards per image) named `cah_animal_deck_01.jpg`, `cah_animal_deck_02.jpg`, and so on.
