@@ -12,8 +12,8 @@ Each line of text in each text file is treated as a possible label for a text fi
 ever appear on one card in the finished deck.
 
 If a card (see later section) uses text from multiple files, the generator will only generate cards while there are
-text lines available in all used text files. For example, if we create "phrases.txt" with 40 lines of text and
-"quotes.txt" with 38 lines of text, there will only be 38 cards containing one of each.
+text lines available in all used text files. For example, if we create `phrases.txt` with 40 lines of text and
+`quotes.txt` with 38 lines of text, there will only be 38 cards containing one of each.
 
 ## Designing a card
 The card layout (which is identical for all cards in the deck) is specified using three images (front, hidden and back) and a JSON
@@ -50,7 +50,7 @@ The format of the JSON file is as follows:
 ```
 
 The example above defines cards with two pieces of text on each card.
-The first text is taken from the file "phrases.txt" and the second is from "quotes.txt".
+The first text is taken from the file `phrases.txt` and the second is from `quotes.txt`.
 Both of these files must be present in the deck directory.
 
 The size of the cards will be equal to the size of the front-image.
@@ -62,7 +62,7 @@ When you have a card design (the JSON file and images) and a deck (a named direc
 Let's say I've come up with a set of new white cards with animal themes for CaH, written a JSON file (`cah-white.json`) and created the directory `cah-animals/` with a text file in it.
 
 ```bash
-$ cardcinogen --template cah-white --deck cah-animals --output cah_animal_deck
+$ cardcinogen.py --template cah-white --deck cah-animals --output cah_animal_deck
 ```
 
 The script will generate one or more jpeg images (there can be a maximum of 69 cards per image) named `cah_animal_deck_01.jpg`, `cah_animal_deck_02.jpg`, and so on.
