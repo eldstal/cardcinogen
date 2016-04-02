@@ -9,6 +9,9 @@ python3, pillow
 $ pip install -r requirements.txt
 ```
 
+On linux, requires font-config to locate installed fonts.
+The two supplied templates use the Liberation Sans TTF font (https://fedorahosted.org/liberation-fonts/)
+
 ## Supported Games
 Any game with cards that are identical in style but unique in text.
 
