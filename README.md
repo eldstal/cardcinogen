@@ -31,8 +31,8 @@ explicit linebreak
 
 If a card (see later section) uses text from multiple files, the generator will
 only generate cards while there are text lines available in all used text
-files. For example, if we create `phrases.txt` with 40 lines of text and
-`quotes.txt` with 38 lines of text, there will only be 38 cards containing one
+files. For example, if we create `music.txt` with 40 music questions and
+`history.txt` with 38 history questions, there will only be 38 cards containing one
 of each.
 
 ## Designing a card
