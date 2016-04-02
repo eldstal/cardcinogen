@@ -48,26 +48,29 @@ The format of the JSON file is as follows:
     "hidden-image": "hidden.jpeg",
     "text-labels": [
         {
-            "source": "phrases.txt",
-            "x": "20",
-            "y": "35",
+            "source": "music.txt",
+            "x": 20,
+            "y": 35,
+            "width": 180,
+            "height": 300,
             "color": "#ff0000",
             "font-face": "Sans Serif",
             "font-size": 12,
-            "font-weight": "regular"
+            "font-weight": "regular",
+            "line-spacing": 4
         },
         
         {
-            "source": "quotes.txt",
-            "x": "20",
-            "y": "50",
+            "source": "history.txt",
+            "x": 20,
+            "y": 50,
         }
     ]
 }
 ```
 
 The example above defines cards with two pieces of text on each card.
-The first text is taken from the file `phrases.txt` and the second is from `quotes.txt`.
+The first text is taken from the file `music.txt` and the second is from `history.txt`.
 Both of these files must be present in the deck directory.
 
 The size of the cards will be equal to the size of the front-image.  The x, y,
