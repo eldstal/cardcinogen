@@ -22,7 +22,7 @@ def main():
   parser.add_argument("--deck", "-d", required=True,
                       help="A directory with text files, as named in the JSON template")
 
-  parser.add_argument("--output", "-o", default="",
+  parser.add_argument("--output-prefix", "-o", metavar="output_prefix", default="",
                       help="Name prefix for the generated deck JPEGs. A serial number will be appended. By default, will contain the template name and the deck name.")
 
   conf = parser.parse_args()
@@ -34,11 +34,11 @@ def main():
     sys.stderr.write("Supplied --deck is not a directory.")
     return 1
 
-  if (conf.output == ""):
+  if (conf.output_prefix == ""):
     # Generate a nice default name for the output images
     template_name = os.path.splitext(os.path.basename(conf.template.name))[0]
     deck_name = os.path.basename(conf.deck)
-    conf.output = template_name + "_" + deck_name + "_"
+    conf.output_prefix = template_name + "_" + deck_name + "_"
 
   # Keeps track of the next piece of text in each opened file.
   textgen = TextGenerator(conf.deck)
@@ -66,7 +66,7 @@ def main():
 
   serial = 1
   for img in tilings:
-    filename = conf.output + str(serial).zfill(2) + ".jpeg"
+    filename = conf.output_prefix + str(serial).zfill(2) + ".jpeg"
     img.save(filename)
     serial += 1
 

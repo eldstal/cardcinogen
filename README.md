@@ -86,7 +86,7 @@ cards with animal themes for CaH, written a JSON file (`cah-white.json`) and
 created the deck directory (`cah-animals/`) with a text file in it.
 
 ```bash
-$ Cardcinogen.py --template cards-against-humanity/cah-white.json --deck cards-against-humanity/animals --output cah_animal_deck_
+$ Cardcinogen.py --template cards-against-humanity/cah-white.json --deck cards-against-humanity/animals --output-prefix cah_animal_deck_
 ```
 
 The script will generate one or more jpeg images (there can be a maximum of 69

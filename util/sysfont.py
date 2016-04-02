@@ -96,6 +96,7 @@ def _cache_fonts_fontconfig():
         pout = proc.communicate()[0]
         output = stringify(pout, "utf-8")
     except OSError:
+        sys.stderr.write("Unable to execute fc-list. Please install fontconfig.\n")
         return
 
     for entry in output.split(os.linesep):

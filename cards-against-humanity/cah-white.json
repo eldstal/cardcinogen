@@ -8,6 +8,8 @@
               "y": 32,
               "width": 308,
               "height": 438,
+              "line-spacing": 4,
+              "color": "#000000",
               "font-face": "Liberation Sans",
               "font-size": 32,
               "font-weight": "bold"

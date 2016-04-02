@@ -9,6 +9,7 @@
               "width": 270,
               "height": 35,
               "color": "#333333",
+              "line-spacing": 4,
               "font-face": "Liberation Sans",
               "font-size": 24,
               "font-weight": "italic"
@@ -20,6 +21,7 @@
               "width": 270,
               "height": 35,
               "color": "#333333",
+              "line-spacing": 4,
               "font-face": "Liberation Sans",
               "font-size": 24,
               "font-weight": "italic"
@@ -31,6 +33,7 @@
               "width": 270,
               "height": 35,
               "color": "#333333",
+              "line-spacing": 4,
               "font-face": "Liberation Sans",
               "font-size": 24,
               "font-weight": "italic"
@@ -45,6 +48,7 @@
               "width": 270,
               "height": 35,
               "color": "#333333",
+              "line-spacing": 4,
               "font-face": "Liberation Sans",
               "font-size": 24,
               "font-weight": "italic"
@@ -56,6 +60,7 @@
               "width": 270,
               "height": 35,
               "color": "#333333",
+              "line-spacing": 4,
               "font-face": "Liberation Sans",
               "font-size": 24,
               "font-weight": "italic"
@@ -67,6 +72,7 @@
               "width": 270,
               "height": 35,
               "color": "#333333",
+              "line-spacing": 4,
               "font-face": "Liberation Sans",
               "font-size": 24,
               "font-weight": "italic"
@@ -82,6 +88,7 @@
               "width": 270,
               "height": 35,
               "color": "#000000",
+              "line-spacing": 4,
               "font-face": "Liberation Sans",
               "font-size": 24,
               "font-weight": "italic"
@@ -93,6 +100,7 @@
               "width": 270,
               "height": 35,
               "color": "#000000",
+              "line-spacing": 4,
               "font-face": "Liberation Sans",
               "font-size": 24,
               "font-weight": "italic"
@@ -104,6 +112,7 @@
               "width": 270,
               "height": 35,
               "color": "#000000",
+              "line-spacing": 4,
               "font-face": "Liberation Sans",
               "font-size": 24,
               "font-weight": "italic"
