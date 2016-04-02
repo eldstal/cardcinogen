@@ -77,7 +77,7 @@ Please note that the generated tiled images only contain the card faces and the 
 
 
 ## Future features (probably not going to happen)
-* Fancier font stuff, such as text wrapping or multi-line text labels
+* Fancier font stuff, such as centered text
 * Two-sided cards, such as in Trivial Pursuit
 
 
