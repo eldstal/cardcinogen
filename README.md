@@ -1,6 +1,9 @@
 # cardcinogen
 A deck generator for Tabletop Simulator, allowing users to create expansions for word-card-type games.
 
+## Requirements
+python3, pillow (install with pip)
+
 ## Supported Games
 Any game with cards that are identical in style but unique in text.
 
@@ -22,30 +25,26 @@ file which defines the dynamic aspects of the card.
 The format of the JSON file is as follows:
 ```json
 {
-    "back-image": "card-back.jpeg",
-    "front-image": "card-front.jpeg",
-    "hidden-image": "card-hidden.jpeg",
-    "layout": {
-        "text-labels": [
-            {
-                "source": "phrases.txt",
-                "x": "10%",
-                "y": "15%",
-                "width": "80%",
-                "height": "5%",
-                "font-face": "Sans Serif",
-                "font-size": 12,
-                "font-weight": "regular"
-            },
-            
-            {
-                "source": "quotes.txt",
-                "x": "10%",
-                "y": "-",
-                "width": "80%"
-            }
-        ]
-    }
+    "back-image": "back.jpeg",
+    "front-image": "front.jpeg",
+    "hidden-image": "hidden.jpeg",
+    "text-labels": [
+        {
+            "source": "phrases.txt",
+            "x": "20",
+            "y": "35",
+            "color": "#ff0000",
+            "font-face": "Sans Serif",
+            "font-size": 12,
+            "font-weight": "regular"
+        },
+        
+        {
+            "source": "quotes.txt",
+            "x": "20",
+            "y": "50",
+        }
+    ]
 }
 ```
 
@@ -53,8 +52,9 @@ The example above defines cards with two pieces of text on each card.
 The first text is taken from the file `phrases.txt` and the second is from `quotes.txt`.
 Both of these files must be present in the deck directory.
 
-The size of the cards will be equal to the size of the front-image.
-The x, y, width and height values for each text label can be specified as a percentage (of the card size) or as an absolute pixel distance. Negative values are counted from the opposite card edge (right or bottom).
+The size of the cards will be equal to the size of the front-image.  The x, y,
+for each text label are specified in pixels, defining the top-left corner of
+the text label from the top-left corner of the card.
 
 
 ## Invocation
@@ -62,9 +62,21 @@ When you have a card design (the JSON file and images) and a deck (a named direc
 Let's say I've come up with a set of new white cards with animal themes for CaH, written a JSON file (`cah-white.json`) and created the deck directory (`cah-animals/`) with a text file in it.
 
 ```bash
-$ cardcinogen.py --template cah-white.json --deck cah-animals --output cah_animal_deck
+$ cardcinogen.py --template cards-against-humanity/cah-white.json --deck cards-against-humanity/animals --output cah_animal_deck
 ```
 
 The script will generate one or more jpeg images (there can be a maximum of 69 cards per image) named `cah_animal_deck_01.jpg`, `cah_animal_deck_02.jpg`, and so on.
 
 These images can be imported as decks in Tabletop Sim.
+
+
+
+## Future features (probably not going to happen)
+* Fancier font stuff, such as text wrapping or multi-line text labels
+* Two-sided cards, such as in Trivial Pursuit
+
+
+
+# Acknowledgements
+Uses sysfont from python-utils (https://bitbucket.org/marcusva/python-utils)
+

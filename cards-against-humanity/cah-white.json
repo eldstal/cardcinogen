@@ -1,0 +1,15 @@
+{
+    "back-image": "white-back.png",
+    "front-image": "white-front.png",
+    "hidden-image": "white-hidden.png",
+    "layout": [
+          {
+              "source": "white.txt",
+              "x": "32",
+              "y": "32",
+              "font-face": "Liberation Sans",
+              "font-size": 32,
+              "font-weight": "bold"
+          }
+    ]
+}
