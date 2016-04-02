@@ -7,6 +7,8 @@ python3, pillow (install with pip)
 ## Supported Games
 Any game with cards that are identical in style but unique in text.
 
+The original purpose of the script was to generate expansions for the game Concept (http://boardgamegeek.com/boardgame/147151/concept), but it also works for Cards Against Humanity (templates included) and any other game with the same type of unique-text cards.
+
 ## Defining a deck
 A deck is a collection of unique cards, which will generate one or more large image maps of card faces.
 A deck is specified by creating a directory (whose name is the name of the deck) containing a set of text files.
@@ -62,12 +64,13 @@ When you have a card design (the JSON file and images) and a deck (a named direc
 Let's say I've come up with a set of new white cards with animal themes for CaH, written a JSON file (`cah-white.json`) and created the deck directory (`cah-animals/`) with a text file in it.
 
 ```bash
-$ cardcinogen.py --template cards-against-humanity/cah-white.json --deck cards-against-humanity/animals --output cah_animal_deck
+$ Cardcinogen.py --template cards-against-humanity/cah-white.json --deck cards-against-humanity/animals --output cah_animal_deck_
 ```
 
 The script will generate one or more jpeg images (there can be a maximum of 69 cards per image) named `cah_animal_deck_01.jpg`, `cah_animal_deck_02.jpg`, and so on.
 
 These images can be imported as decks in Tabletop Sim.
+Please note that the generated tiled images only contain the card faces and the "hidden card" face, and not the card back. Make sure you also have a back image that is the same size as the front, because you will need it to generate a deck inside the game.
 
 
 

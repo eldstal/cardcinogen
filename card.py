@@ -32,7 +32,6 @@ class CardTemplate:
   """ Parsed version of a JSON card template """
   def __init__(self, json, rootdir="."):
     self.front_name =   util.get_default(json, "front-image", "front.png")
-    self.back_name =    util.get_default(json, "back-image", "back.png")
     self.hidden_name =  util.get_default(json, "hidden-image", "hidden.png")
 
     self.labels = []
@@ -40,12 +39,10 @@ class CardTemplate:
       self.labels.append(TextLabel(j))
 
     front_path  = os.path.join(rootdir, self.front_name)
-    back_path   = os.path.join(rootdir, self.back_name)
     hidden_path = os.path.join(rootdir, self.hidden_name)
 
     # Make sure we have valid images and they all have matching sizes
     self.front   = default_image(front_path, (372, 520))
-    self.back    = default_image(back_path, self.front.size, self.front.size)
     self.hidden  = default_image(hidden_path, self.front.size, self.front.size)
 
   def make_card(self, textgen):
@@ -73,14 +70,12 @@ class TestCardStuff(unittest.TestCase):
   def test_default(self):
     tmpl_default = CardTemplate({})
     self.assertEqual(tmpl_default.front_name, "front.png")
-    self.assertEqual(tmpl_default.back_name, "back.png")
     self.assertEqual(tmpl_default.hidden_name, "hidden.png")
     self.assertEqual(tmpl_default.labels, [])
 
     # Override all settings
     dic = {
       "front-image": "card-front.jpeg",
-      "back-image": "card-back.jpeg",
       "hidden-image": "card-hidden.jpeg",
       "layout": [
         {
@@ -94,7 +89,6 @@ class TestCardStuff(unittest.TestCase):
 
     tmpl = CardTemplate(dic)
     self.assertEqual(tmpl.front_name, dic["front-image"])
-    self.assertEqual(tmpl.back_name, dic["back-image"])
     self.assertEqual(tmpl.hidden_name, dic["hidden-image"])
     self.assertEqual(len(tmpl.labels), 2)
     self.assertEqual(tmpl.labels[0].x, dic["layout"][0]["x"])
