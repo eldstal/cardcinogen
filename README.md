@@ -3,7 +3,11 @@ A deck generator for Tabletop Simulator, allowing users to create expansions
 for word-card-type games.
 
 ## Requirements
-python3, pillow (install with pip)
+python3, pillow
+
+```
+$ pip install -r requirements.txt
+```
 
 ## Supported Games
 Any game with cards that are identical in style but unique in text.
