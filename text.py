@@ -40,15 +40,26 @@ class TextLabel:
 
   def wrap_pixel_width(self, text, maxwidth):
     """ Split into a list of text lines, such that none of them exceeds the pixel width """
-    for chars in range(len(text), 1, -1):
-      lines = textwrap.wrap(text, chars)
-      too_wide = False
-      for l in lines:
-        lw, _ = self.font.getsize(l)
-        if (lw > maxwidth): too_wide = True
+    ret = []
 
-      if (not too_wide): return lines
-    return None
+    # Start by respecting any \n newlines in the text
+    paragraphs = text.split('\\n')
+
+    # Each of those sections is wrapped individually
+    for paragraph in paragraphs:
+      for chars in range(len(paragraph), 1, -1):
+        lines = textwrap.wrap(paragraph, chars)
+        too_wide = False
+        for l in lines:
+          lw, _ = self.font.getsize(l)
+          if (lw > maxwidth): too_wide = True
+
+        if (not too_wide):
+          ret += lines
+          break
+
+    if (len(ret) == 0): ret = None
+    return ret
 
   def render(self, dimensions, text):
     """ Generate a transparent PIL card layer with the text on it """
