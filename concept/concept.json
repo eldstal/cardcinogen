@@ -1,0 +1,94 @@
+{
+    "front-image": "card-front.jpeg",
+    "hidden-image": "card-back.jpeg",
+    "layout": [
+          {
+              "source": "blue.txt",
+              "x": "109",
+              "y": "99",
+              "color": "#333333",
+              "font-face": "Liberation Sans",
+              "font-size": 24,
+              "font-weight": "italic"
+          },
+          {
+              "source": "blue.txt",
+              "x": "109",
+              "y": "150",
+              "color": "#333333",
+              "font-face": "Liberation Sans",
+              "font-size": 24,
+              "font-weight": "italic"
+          },
+          {
+              "source": "blue.txt",
+              "x": "109",
+              "y": "200",
+              "color": "#333333",
+              "font-face": "Liberation Sans",
+              "font-size": 24,
+              "font-weight": "italic"
+          },
+
+
+
+          {
+              "source": "red.txt",
+              "x": "109",
+              "y": "316",
+              "color": "#333333",
+              "font-face": "Liberation Sans",
+              "font-size": 24,
+              "font-weight": "italic"
+          },
+          {
+              "source": "red.txt",
+              "x": "109",
+              "y": "370",
+              "color": "#333333",
+              "font-face": "Liberation Sans",
+              "font-size": 24,
+              "font-weight": "italic"
+          },
+          {
+              "source": "red.txt",
+              "x": "109",
+              "y": "418",
+              "color": "#333333",
+              "font-face": "Liberation Sans",
+              "font-size": 24,
+              "font-weight": "italic"
+          },
+
+
+
+
+          {
+              "source": "black.txt",
+              "x": "109",
+              "y": "530",
+              "color": "#000000",
+              "font-face": "Liberation Sans",
+              "font-size": 24,
+              "font-weight": "italic"
+          },
+          {
+              "source": "black.txt",
+              "x": "109",
+              "y": "583",
+              "color": "#000000",
+              "font-face": "Liberation Sans",
+              "font-size": 24,
+              "font-weight": "italic"
+          },
+          {
+              "source": "black.txt",
+              "x": "109",
+              "y": "633",
+              "color": "#000000",
+              "font-face": "Liberation Sans",
+              "font-size": 24,
+              "font-weight": "italic"
+          }
+    ]
+}

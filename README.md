@@ -7,7 +7,9 @@ python3, pillow (install with pip)
 ## Supported Games
 Any game with cards that are identical in style but unique in text.
 
-The original purpose of the script was to generate expansions for the game Concept (http://boardgamegeek.com/boardgame/147151/concept), but it also works for Cards Against Humanity (templates included) and any other game with the same type of unique-text cards.
+The original purpose of the script was to generate expansions for the game Concept (http://boardgamegeek.com/boardgame/147151/concept), but it also works for Cards Against Humanity and any other game with the same type of unique-text cards.
+
+Templates are included for Concept and CaH in the corresponding directories.
 
 ## Defining a deck
 A deck is a collection of unique cards, which will generate one or more large image maps of card faces.
