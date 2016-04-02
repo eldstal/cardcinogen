@@ -1,13 +1,14 @@
 {
-    "front-image": "white-front.png",
-    "hidden-image": "white-hidden.png",
+    "front-image": "black-front.png",
+    "hidden-image": "black-back.png",
     "layout": [
           {
-              "source": "white.txt",
+              "source": "black.txt",
               "x": 32,
               "y": 32,
               "width": 308,
               "height": 438,
+              "color": "#FFFFFF",
               "font-face": "Liberation Sans",
               "font-size": 32,
               "font-weight": "bold"

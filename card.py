@@ -15,7 +15,6 @@ def default_image(path, default_dimension, accept_dimension=None):
     loaded = Image.open(path)
     loaded.load()
   except:
-    print(sys.exc_info()[0])
     sys.stderr.write("Unable to load image %s. Falling back to plain.\n" % path)
     return Image.new("RGBA", default_dimension, (230, 230, 255, 255))
 
@@ -49,14 +48,20 @@ class CardTemplate:
     """ Generate a single card """
     face = self.front.copy()
     for l in self.labels:
-      text = textgen.gen(l.source)  # A unique string for this label
+      overlay = None
 
-      if (text is None):
-        # End of file
-        return None
+      # Some text strings may fail to render (not fit within the label boundary).
+      # Those will be rendered as None, so we draw a new text string and try again.
+      while (overlay is None):
+        text = textgen.gen(l.source)  # A unique string for this label
 
-      overlay = l.render(face.size, text)
-      face.paste(im=overlay, mask=overlay)
+        if (text is None):
+          # End of file
+          return None
+
+        overlay = l.render(face.size, text)
+
+      face.paste(overlay, mask=overlay)
 
     return face
 
