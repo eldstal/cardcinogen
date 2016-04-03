@@ -5,7 +5,7 @@ def get_default(dic, k, fallback, cast=None):
   retval = fallback
 
   if (k in dic): retval = dic[k]
-  else: sys.stderr.write("Warning: Unspecified setting %s, defaulting to %s\n" % (k, fallback))
+  #else: sys.stderr.write("Warning: Unspecified setting %s, defaulting to %s\n" % (k, fallback))
 
   if (cast is not None): retval = cast(retval)
   return retval
