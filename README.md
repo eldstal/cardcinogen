@@ -82,6 +82,7 @@ The format of the JSON file is as follows:
             "source": "history.txt",
             "x": 20,
             "y": 50,
+            "rotation": 4
         }
     ]
 }
