@@ -2,9 +2,69 @@ import unittest
 
 import sys
 import os
+import json
 import textwrap
 from util import sysfont, util
 from PIL import Image, ImageDraw, ImageFont
+
+
+def wrap_pixel_width(text, maxwidth, font, linesep='\n'):
+  """ Split into a list of text lines, such that none of them exceeds the pixel width """
+  ret = []
+
+  # Start by respecting any \n newlines in the text
+  paragraphs = text.split(linesep)
+
+  # Each of those sections is wrapped individually
+  for paragraph in paragraphs:
+    if (paragraph == ""): # respect empty lines...
+      ret += [" "]
+      continue
+
+    for chars in range(len(paragraph), 1, -1):
+      lines = textwrap.wrap(paragraph, chars)
+      too_wide = False
+      for l in lines:
+        lw, _ = font.getsize(l)
+        if (lw > maxwidth): too_wide = True
+
+      if (not too_wide):
+        ret += lines
+        break
+
+
+  if (len(ret) == 0): ret = None
+  return ret
+
+# Generate a label-image of a size that fits the text and render it
+def render_lines(lines, font, color="#000000", alignment="left", spacing=4):
+  width = 0
+  height = 0
+
+  # Measure the text to figure out our bounds
+  for l in lines:
+    w,h = font.getsize(l)
+    width = max(w, width)
+    height = height + h + spacing
+
+  image = Image.new("RGBA", (width*2, height*2), (0,0,0,0))
+  draw = ImageDraw.Draw(image)
+
+  # Render the text onto our label
+  y = 0
+  for l in lines:
+    w,h = font.getsize(l)
+
+    # Alignment affects each line of text differently.
+    x = 0
+    if (alignment == "center"): x = (width - w) / 2
+    if (alignment == "right"): x = width - w
+
+    draw.text((x, y), l, font=font, fill=color)
+    y += h + spacing
+
+  # Crop the image down to the exact bounds of the text
+  return image.crop(image.getbbox())
 
 
 class TextLabel:
@@ -13,6 +73,7 @@ class TextLabel:
   def __init__(self, json):
     """ Parse out the various settings of a text label and clean them up """
     self.source =    util.get_default(json, "source", "text.txt")
+    self.type =      util.get_default(json, "type", "simple")
     self.x =         util.get_default(json, "x", 10, int)
     self.y =         util.get_default(json, "y", 10, int)
     self.width =     util.get_default(json, "width", 40000, int)
@@ -23,6 +84,8 @@ class TextLabel:
     self.spacing =   util.get_default(json, "line-spacing", 4, int)
     self.alignment = util.get_default(json, "alignment", "left")
     self.baseline =  util.get_default(json, "baseline", "top")
+    self.wordwrap =  util.get_default(json, "wordwrap", True, bool)
+    self.rotation =  util.get_default(json, "rotation", 0, int)
     weight =         util.get_default(json, "font-weight", "regular")
 
     self.fontweight = sysfont.STYLE_NORMAL
@@ -40,96 +103,69 @@ class TextLabel:
     if (candidate_font is not None):
       self.font = ImageFont.truetype(candidate_font, self.fontsize)
 
-  def wrap_pixel_width(self, text, maxwidth):
-    """ Split into a list of text lines, such that none of them exceeds the pixel width """
-    ret = []
 
-    # Start by respecting any \n newlines in the text
-    paragraphs = text.split('\\n')
-
-    # Each of those sections is wrapped individually
-    for paragraph in paragraphs:
-      for chars in range(len(paragraph), 1, -1):
-        lines = textwrap.wrap(paragraph, chars)
-        too_wide = False
-        for l in lines:
-          lw, _ = self.font.getsize(l)
-          if (lw > maxwidth): too_wide = True
-
-        if (not too_wide):
-          ret += lines
-          break
-
-    if (len(ret) == 0): ret = None
-    return ret
-
-  # Generate a label-image of a size that fits the text and render it
-  def render_lines(self, lines):
-    width = 1
-    height = 1
-
-    # Measure the text to figure out our bounds
-    for l in lines:
-      w,h = self.font.getsize(l)
-      width = max(w, width)
-      height = height + h + self.spacing
-
-    image = Image.new("RGBA", (width, height), (0,0,0,0))
-    draw = ImageDraw.Draw(image)
-
-    # Render the text onto our label
-    y = 0
-    for l in lines:
-      w,h = self.font.getsize(l)
-
-      # Alignment affects each line of text differently.
-      x = 0
-      if (self.alignment == "center"): x = (width - w) / 2
-      if (self.alignment == "right"): x = width - w
-
-      draw.text((x, y), l, font=self.font, fill=self.color)
-      y += h + self.spacing
-
-    # Crop the image down to the exact bounds of the text
-    return image
-
-  def render(self, dimensions, text):
+  def render(self, card_dims, text):
     """ Generate a transparent PIL card layer with the text on it """
     # If the user has set a max width, respect that.
     # If not, we use the edge of the card.
 
-    # This needs to take into account the alignment (X)
-    maxwidth = min(dimensions[0] - self.x, self.width)
-    #xbound = (self.x, self.x + self.width)
-    if (self.alignment == "center"):
-      maxwidth = min(2*self.x, 2*(dimensions[0] - self.x))     # Edges of the card
-      maxwidth = min(maxwidth, self.width)                     # Specified width
+    if (self.rotation != 0):
+      # Due to rotation of the text, we don't fully take the card's edges into account.
+      maxdim = max(card_dims)
+      maxwidth = min(self.width, maxdim)
+      maxheight = min(self.height, maxdim)
 
-    elif (self.alignment == "right"):
-      maxwidth = min(self.x, self.width)
+    else:
+      # This needs to take into account the alignment (X)
+      maxwidth = min(card_dims[0] - self.x, self.width)
+      if (self.alignment == "center"):
+        maxwidth = min(2*self.x, 2*(card_dims[0] - self.x))     # Edges of the card
+        maxwidth = min(maxwidth, self.width)                     # Specified width
 
-    # Likewise, we need to find the max height including the edges of the card.
-    maxheight = min(dimensions[1] - self.y, self.height)
-    if (self.baseline == "center"):
-      maxheight = min(2*self.y, 2*(dimensions[1] - self.y))   # Edges of the card
-      maxheight = min(maxheight, self.height)                 # Specified height
+      elif (self.alignment == "right"):
+        maxwidth = min(self.x, self.width)
 
-    elif (self.baseline == "bottom"):
-      maxheight = min(self.y, self.height)
+      # Likewise, we need to find the max height including the edges of the card.
+      maxheight = min(card_dims[1] - self.y, self.height)
+      if (self.baseline == "center"):
+        maxheight = min(2*self.y, 2*(card_dims[1] - self.y))   # Edges of the card
+        maxheight = min(maxheight, self.height)                 # Specified height
+
+      elif (self.baseline == "bottom"):
+        maxheight = min(self.y, self.height)
 
     # Split the text into lines, in a way that fits our width
-    lines = self.wrap_pixel_width(text, maxwidth)
+    lines = [text]
+    if (self.wordwrap):
+      lines = wrap_pixel_width(text, maxwidth, self.font, linesep='\\n')
 
     if (lines is None):
       sys.stderr.write("Warning: Unable to wrap text label \"%s\"\n" % text)
       return None
 
     # Render the text, one line at a time
-    label = self.render_lines(lines)
+    label = render_lines(lines,
+                         font=self.font,
+                         color=self.color,
+                         alignment=self.alignment,
+                         spacing=self.spacing)
+
+    if (label.width > maxwidth):
+      sys.stderr.write("Warning: Text label overflows max width: \"%s\"\n" % text)
+      return None
 
     if (label.height > maxheight):
       sys.stderr.write("Warning: Text label overflows max height: \"%s\"\n" % text)
       return None
+
+    if (self.rotation != 0):
+      # Give enough space in all directions to properly rotate
+      maxdim = max(label.height, label.width)
+      rotimg = Image.new("RGBA", (maxdim*2, maxdim*2), (0, 0, 0, 0))
+      rotimg.paste(label, (maxdim, maxdim), mask=label)
+      rotimg = rotimg.rotate(self.rotation)
+      # Trim off the excess
+      label = rotimg.crop(rotimg.getbbox())
 
     # Baseline affects the Y coordinate of our text origin
     y = self.y
@@ -141,8 +177,53 @@ class TextLabel:
     if (self.alignment == "center"): x = int(self.x - (label.width/2))
     if (self.alignment == "right"): x = int(self.x - label.width)
 
-    image = Image.new("RGBA", dimensions, (0,0,0,0))
+    if (x < 0 or y < 0 or
+        x + label.width > card_dims[0] or
+        y + label.height > card_dims[1]):
+      sys.stderr.write("Warning: Text label overflows card boundary: \"%s\"\n" % text)
+      return None
+
+    image = Image.new("RGBA", card_dims, (0,0,0,0))
     image.paste(label, (x,y), mask=label)
+
+    return image
+
+class TextLabelComplex:
+  """ Parsed version of a complex text-label object """
+
+  def __init__(self, json, rootdir):
+    self.source =       util.get_default(json, "source", "text.json")
+    self.type =         util.get_default(json, "type", "simple")
+    self.frontSource =  util.get_default(json, "front", "")
+    self.subLabelSpecs =    util.get_default(json, "texts", [])
+    self.directory =    rootdir
+
+    self.subLabels = {}
+    for spec in self.subLabelSpecs:
+      name = util.get_default(spec, "name", "")
+      self.subLabels[name] = TextLabel(spec)
+
+
+
+  def render(self, dimensions, texts):
+    """ Generate a transparent PIL card layer with the text on it """
+
+    image = Image.new("RGBA", dimensions, (0,0,0,0))
+    if (self.frontSource != ""):
+      path = os.path.join(self.directory, self.frontSource)
+      front = Image.open(path, 'r')
+      image.paste(front, (0,0))
+
+    for name,label in self.subLabels.items():
+
+      text = util.get_default(texts, name, "")
+
+      rendered_text = label.render(dimensions, text)
+      if (rendered_text is None):
+        sys.stderr.write("Failed to render sub-label %s.\n" % name)
+        return None
+
+      image.paste(rendered_text, (0, 0), mask=rendered_text)
 
     return image
 
@@ -169,6 +250,21 @@ class TextGenerator:
       return None
     return line
 
+  def gen_complex(self, filename):
+    if (filename not in self.loaded):
+      path = os.path.join(self.directory, filename)
+      handle = open(path, "r")
+      if (handle is None):
+        sys.stderr.write("Unable to open json file %s\n" % path)
+        return None
+      self.loaded[filename] = json.load(handle)
+
+    if (len(self.loaded[filename]) == 0):
+      #End of file
+      return None
+    texts = self.loaded[filename].pop()
+    return texts
+
 #
 # Unit tests
 #
@@ -188,6 +284,8 @@ class TestTextStuff(unittest.TestCase):
     self.assertEqual(lab_default.fontweight, sysfont.STYLE_NORMAL)
     self.assertEqual(lab_default.spacing, 4)
     self.assertEqual(lab_default.alignment, "left")
+    self.assertEqual(lab_default.rotation, 0)
+    self.assertEqual(lab_default.wordwrap, True)
     self.assertEqual(lab_default.baseline, "top")
 
     # This one overrides every possible setting
@@ -203,6 +301,8 @@ class TestTextStuff(unittest.TestCase):
       "font-weight": "bold",
       "line-spacing": 12,
       "alignment": "center",
+      "rotation": 90,
+      "wordwrap": False,
       "baseline": "bottom"
     }
 
@@ -219,6 +319,8 @@ class TestTextStuff(unittest.TestCase):
     self.assertEqual(lab_override.fontweight, sysfont.STYLE_BOLD)
     self.assertEqual(lab_override.spacing, dic["line-spacing"])
     self.assertEqual(lab_override.alignment, dic["alignment"])
+    self.assertEqual(lab_override.rotation, dic["rotation"])
+    self.assertEqual(lab_override.wordwrap, dic["wordwrap"])
     self.assertEqual(lab_override.baseline, dic["baseline"])
 
   def test_render_text(self):

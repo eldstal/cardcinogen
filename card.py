@@ -6,7 +6,7 @@ import sys
 
 from util import util
 from PIL import Image
-from text import TextLabel
+from text import TextLabel, TextLabelComplex
 
 # If the loaded image is None, return a default of the specified dimensions
 # If accept_dimension is specified, scale non-matching image to that size
@@ -35,7 +35,11 @@ class CardTemplate:
 
     self.labels = []
     for j in util.get_default(json, "layout", []):
-      self.labels.append(TextLabel(j))
+      self.type = util.get_default(j, "type", "simple")
+      if (self.type == "simple"):
+        self.labels.append(TextLabel(j))
+      elif (self.type == "complex"):
+        self.labels.append(TextLabelComplex(j, rootdir))
 
     front_path  = os.path.join(rootdir, self.front_name)
     hidden_path = os.path.join(rootdir, self.hidden_name)
@@ -53,13 +57,22 @@ class CardTemplate:
       # Some text strings may fail to render (not fit within the label boundary).
       # Those will be rendered as None, so we draw a new text string and try again.
       while (overlay is None):
-        text = textgen.gen(l.source)  # A unique string for this label
+        if (l.type == "simple"):
+          text = textgen.gen(l.source)  # A unique string for this label
 
-        if (text is None):
-          # End of file
-          return None
+          if (text is None):
+            # End of file
+            return None
 
-        overlay = l.render(face.size, text)
+          overlay = l.render(face.size, text)
+        else:
+          texts = textgen.gen_complex(l.source)  # A set of strings for this label
+
+          if (texts is None):
+            # End of file
+            return None
+
+          overlay = l.render(face.size, texts)
 
       face.paste(overlay, mask=overlay)
 
