@@ -12,16 +12,18 @@ class TextLabel:
 
   def __init__(self, json):
     """ Parse out the various settings of a text label and clean them up """
-    self.source =   util.get_default(json, "source", "text.txt")
-    self.x =        util.get_default(json, "x", 10, int)
-    self.y =        util.get_default(json, "y", 10, int)
-    self.width =    util.get_default(json, "width", 40000, int)
-    self.height =   util.get_default(json, "height", 40000, int)
-    self.color =    util.get_default(json, "color", "#000000")
-    self.fontface = util.get_default(json, "font-face", "sans")
-    self.fontsize = util.get_default(json, "font-size", 12, int)
-    self.spacing  = util.get_default(json, "line-spacing", 4, int)
-    weight =        util.get_default(json, "font-weight", "regular")
+    self.source =    util.get_default(json, "source", "text.txt")
+    self.x =         util.get_default(json, "x", 10, int)
+    self.y =         util.get_default(json, "y", 10, int)
+    self.width =     util.get_default(json, "width", 40000, int)
+    self.height =    util.get_default(json, "height", 40000, int)
+    self.color =     util.get_default(json, "color", "#000000")
+    self.fontface =  util.get_default(json, "font-face", "sans")
+    self.fontsize =  util.get_default(json, "font-size", 12, int)
+    self.spacing =   util.get_default(json, "line-spacing", 4, int)
+    self.alignment = util.get_default(json, "alignment", "left")
+    self.baseline =  util.get_default(json, "baseline", "top")
+    weight =         util.get_default(json, "font-weight", "regular")
 
     self.fontweight = sysfont.STYLE_NORMAL
     if (weight == "bold"):   self.fontweight = sysfont.STYLE_BOLD
@@ -61,13 +63,59 @@ class TextLabel:
     if (len(ret) == 0): ret = None
     return ret
 
+  # Generate a label-image of a size that fits the text and render it
+  def render_lines(self, lines):
+    width = 1
+    height = 1
+
+    # Measure the text to figure out our bounds
+    for l in lines:
+      w,h = self.font.getsize(l)
+      width = max(w, width)
+      height = height + h + self.spacing
+
+    image = Image.new("RGBA", (width, height), (0,0,0,0))
+    draw = ImageDraw.Draw(image)
+
+    # Render the text onto our label
+    y = 0
+    for l in lines:
+      w,h = self.font.getsize(l)
+
+      # Alignment affects each line of text differently.
+      x = 0
+      if (self.alignment == "center"): x = (width - w) / 2
+      if (self.alignment == "right"): x = width - w
+
+      draw.text((x, y), l, font=self.font, fill=self.color)
+      y += h + self.spacing
+
+    # Crop the image down to the exact bounds of the text
+    return image
+
   def render(self, dimensions, text):
     """ Generate a transparent PIL card layer with the text on it """
     # If the user has set a max width, respect that.
     # If not, we use the edge of the card.
-    # Ditto for the height
+
+    # This needs to take into account the alignment (X)
     maxwidth = min(dimensions[0] - self.x, self.width)
+    #xbound = (self.x, self.x + self.width)
+    if (self.alignment == "center"):
+      maxwidth = min(2*self.x, 2*(dimensions[0] - self.x))     # Edges of the card
+      maxwidth = min(maxwidth, self.width)                     # Specified width
+
+    elif (self.alignment == "right"):
+      maxwidth = min(self.x, self.width)
+
+    # Likewise, we need to find the max height including the edges of the card.
     maxheight = min(dimensions[1] - self.y, self.height)
+    if (self.baseline == "center"):
+      maxheight = min(2*self.y, 2*(dimensions[1] - self.y))   # Edges of the card
+      maxheight = min(maxheight, self.height)                 # Specified height
+
+    elif (self.baseline == "bottom"):
+      maxheight = min(self.y, self.height)
 
     # Split the text into lines, in a way that fits our width
     lines = self.wrap_pixel_width(text, maxwidth)
@@ -76,19 +124,25 @@ class TextLabel:
       sys.stderr.write("Warning: Unable to wrap text label \"%s\"\n" % text)
       return None
 
-    image = Image.new("RGBA", dimensions, (0,0,0,0))
-    draw = ImageDraw.Draw(image)
-
     # Render the text, one line at a time
-    y = self.y
-    for l in lines:
-      w,h = self.font.getsize(l)
-      draw.text((self.x, y), l, font=self.font, fill=self.color)
-      y += h + self.spacing
+    label = self.render_lines(lines)
 
-    if ((y - self.y) > maxheight):
+    if (label.height > maxheight):
       sys.stderr.write("Warning: Text label overflows max height: \"%s\"\n" % text)
       return None
+
+    # Baseline affects the Y coordinate of our text origin
+    y = self.y
+    if (self.baseline == "center"): y = int(self.y - (label.height/2))
+    if (self.baseline == "bottom"): y = int(self.y - label.height)
+
+    # Alignment affects the X coordinate of our origin
+    x = self.x
+    if (self.alignment == "center"): x = int(self.x - (label.width/2))
+    if (self.alignment == "right"): x = int(self.x - label.width)
+
+    image = Image.new("RGBA", dimensions, (0,0,0,0))
+    image.paste(label, (x,y), mask=label)
 
     return image
 
@@ -131,7 +185,10 @@ class TestTextStuff(unittest.TestCase):
     self.assertEqual(lab_default.source, "text.txt")
     self.assertEqual(lab_default.fontface, "sans")
     self.assertEqual(lab_default.fontsize, 12)
+    self.assertEqual(lab_default.fontweight, sysfont.STYLE_NORMAL)
     self.assertEqual(lab_default.spacing, 4)
+    self.assertEqual(lab_default.alignment, "left")
+    self.assertEqual(lab_default.baseline, "top")
 
     # This one overrides every possible setting
     dic = {
@@ -144,7 +201,9 @@ class TestTextStuff(unittest.TestCase):
       "font-face": "courier new",
       "font-size": 32,
       "font-weight": "bold",
-      "line-spacing": 12
+      "line-spacing": 12,
+      "alignment": "center",
+      "baseline": "bottom"
     }
 
     lab_override = TextLabel(dic)
@@ -157,7 +216,10 @@ class TestTextStuff(unittest.TestCase):
     self.assertEqual(lab_override.color, dic["color"])
     self.assertEqual(lab_override.fontface, dic["font-face"])
     self.assertEqual(lab_override.fontsize, dic["font-size"])
+    self.assertEqual(lab_override.fontweight, sysfont.STYLE_BOLD)
     self.assertEqual(lab_override.spacing, dic["line-spacing"])
+    self.assertEqual(lab_override.alignment, dic["alignment"])
+    self.assertEqual(lab_override.baseline, dic["baseline"])
 
   def test_render_text(self):
     lab_default = TextLabel({ "color": "#AABBCC" })

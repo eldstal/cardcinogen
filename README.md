@@ -60,6 +60,8 @@ The format of the JSON file is as follows:
             "font-face": "Sans Serif",
             "font-size": 12,
             "font-weight": "regular",
+            "alignment": "right",
+            "baseline": "center",
             "line-spacing": 4
         },
         
@@ -76,9 +78,18 @@ The example above defines cards with two pieces of text on each card.
 The first text is taken from the file `music.txt` and the second is from `history.txt`.
 Both of these files must be present in the deck directory.
 
-The size of the cards will be equal to the size of the front-image.  The x, y,
-for each text label are specified in pixels, defining the top-left corner of
-the text label from the top-left corner of the card.
+The size of the cards will be equal to the size of the front-image.
+
+The x value of a label determines its horizontal position. If the alignment is
+"left" (default), this is the left-hand edge of the text. If the alignment is "center"
+ or "right", the x-coordinate determines the center line and the right-hand edge respectively.
+
+The y value works the same way, with the baseline being "top" (top edge of text), "center"
+(vertical centering) or "bottom" (the bottom edge of text).
+
+These positions are relative to the top-left corner of the card.
+
+All label properties are optional.
 
 
 ## Invocation
@@ -93,7 +104,7 @@ $ Cardcinogen.py --template cards-against-humanity/cah-white.json --deck cards-a
 ```
 
 The script will generate one or more jpeg images (there can be a maximum of 69
-cards per image) named `cah_animal_deck_01.jpg`, `cah_animal_deck_02.jpg`, and
+cards per image) named `cah_animal_deck_01.jpeg`, `cah_animal_deck_02.jpeg`, and
 so on.
 
 These images can be imported as decks in Tabletop Sim.  Please note that the
@@ -104,7 +115,7 @@ size as the front, because you will need it to generate a deck inside the game.
 
 
 ## Future features (probably not going to happen)
-* Fancier font stuff, such as centered text
+* Fancier font stuff, such as rotated text
 * Two-sided cards, such as in Trivial Pursuit
 
 
