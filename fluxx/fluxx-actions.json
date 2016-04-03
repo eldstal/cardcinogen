@@ -1,0 +1,71 @@
+{
+    "front-image": "Fluxx_front.jpg",
+    "hidden-image": "Fluxx_hidden.jpg",
+    "layout": [
+          {
+              "source": "actions.json",
+              "type": "complex",
+              "front": "Fluxx_front_actions.jpg",
+              "texts": [
+                  {
+                      "name": "header",
+                      "x": 165,
+                      "y": 140,
+                      "width": 410,
+                      "height": 600,
+                      "line-spacing": -5,
+                      "color": "#000000",
+                      "font-face": "TeXGyreHeros-regular",
+                      "font-size": 30,
+                      "font-weight": "normal",
+                      "rotation": 0,
+                      "wordwrap": true
+                  },
+                  {
+                      "name": "title",
+                      "x": 165,
+                      "y": 285,
+                      "width": 600,
+                      "height": 600,
+                      "line-spacing": -10,
+                      "color": "#000000",
+                      "font-face": "TeXGyreHeros-bold",
+                      "font-size": 65,
+                      "font-weight": "bold",
+                      "rotation": 0,
+                      "wordwrap": true
+                  },
+                  {
+                  	"name": "description",
+                      "x": 165,
+                      "y": 485,
+                      "width": 350,
+                      "height": 800,
+                      "line-spacing": -3,
+                      "color": "#000000",
+                      "font-face": "TeXGyreHeros-regular",
+                      "font-size": 35,
+                      "font-weight": "bold",
+                      "rotation": 0,
+                      "wordwrap": true
+                  },
+                  {
+                      "name": "spine",
+                      "x": 91,
+                      "y": 938,
+                      "width": 808,
+                      "height": 100,
+                      "line-spacing": -20,
+                      "color": "#000000",
+                      "font-face": "TeXGyreHeros-bold",
+                      "font-size": 60,
+                      "rotation": 90,
+                      "wordwrap": false,
+                      "alignment": "center",
+                      "baseline": "bottom",
+                      "font-weight": "bold"
+                  }
+              ]
+          }
+    ]
+}
