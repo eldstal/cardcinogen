@@ -5,7 +5,7 @@
           {
               "source": "actions.json",
               "type": "complex",
-              "front-image": "Fluxx_front_actions.jpg",
+              "front-image": "Fluxx_front_action.jpg",
               "texts": [
                   {
                       "name": "header",
