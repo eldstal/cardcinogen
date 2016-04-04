@@ -28,7 +28,6 @@ def main():
   conf = parser.parse_args()
 
   template_dir = os.path.dirname(conf.template.name)
-    
 
   if (not os.path.isdir(conf.deck)):
     sys.stderr.write("Supplied --deck is not a directory.")

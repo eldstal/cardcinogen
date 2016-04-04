@@ -4,7 +4,8 @@ import sys
 import os
 import json
 import textwrap
-from util import sysfont, util
+import sysfont
+import util
 from PIL import Image, ImageDraw, ImageFont
 
 

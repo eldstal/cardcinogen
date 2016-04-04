@@ -2,7 +2,7 @@
 import os
 import sys
 from subprocess import Popen, PIPE
-from .compat import ISPYTHON2, stringify
+from compat import ISPYTHON2, stringify
 
 if sys.platform in ("win32", "cli"):
     if ISPYTHON2:

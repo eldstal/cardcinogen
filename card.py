@@ -4,7 +4,7 @@ import unittest
 import os
 import sys
 
-from util import util
+import util
 from PIL import Image
 from text import TextLabel, TextLabelComplex
 
