@@ -62,7 +62,7 @@ The format of the JSON file is as follows:
     "back-image": "back.jpeg",
     "front-image": "front.jpeg",
     "hidden-image": "hidden.jpeg",
-    "text-labels": [
+    "layout": [
         {
             "source": "music.txt",
             "x": 20,
