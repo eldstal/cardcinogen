@@ -42,11 +42,14 @@ def render_lines(lines, font, color="#000000", justify="left", spacing=4):
   width = 0
   height = 0
 
+  # The fixed height of one line of text. Let's say M is about right.
+  _, lineheight = font.getsize("M")
+
   # Measure the text to figure out our bounds
   for l in lines:
     w,h = font.getsize(l)
     width = max(w, width)
-    height = height + h + spacing
+    height = height + lineheight + spacing
 
   # Some fonts render outside that calculated size, for some reason.
   # Give them some margins and crop it off later.
@@ -56,7 +59,7 @@ def render_lines(lines, font, color="#000000", justify="left", spacing=4):
   # Render the text onto our label
   y = 0
   for l in lines:
-    w,h = font.getsize(l)
+    w,_ = font.getsize(l)
 
     # Alignment affects each line of text differently.
     x = 0
@@ -64,7 +67,7 @@ def render_lines(lines, font, color="#000000", justify="left", spacing=4):
     if (justify == "right"): x = width - w
 
     draw.text((x, y), l, font=font, fill=color)
-    y += h + spacing
+    y += lineheight + spacing
 
   # Crop the image down to the exact bounds of the text
   return image.crop(image.getbbox())
