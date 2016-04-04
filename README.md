@@ -11,7 +11,9 @@ $ pip install -r requirements.txt
 
 On linux, requires font-config to locate installed fonts.
 
-The supplied templates use the Liberation Sans TTF font (https://fedorahosted.org/liberation-fonts/) and TexGyreHeros (https://www.fontsquirrel.com/fonts/tex-gyre-heros)
+The supplied templates use
+* Liberation Sans and Liberation Serif TTF fonts (https://fedorahosted.org/liberation-fonts/)
+* TexGyreHeros (https://www.fontsquirrel.com/fonts/tex-gyre-heros)
 
 ## Supported Games
 Any game with cards that are identical in style but unique in text.
@@ -153,13 +155,13 @@ The layout of a card with a JSON source is specified as follows:
 **quiz.json**
 ```json
 {
-  "front-image": "quiz_front.jpg",
-  "hidden-image": "quiz_hidden.jpg",
+  "front-image": "quiz_front.png",
+  "hidden-image": "quiz_hidden.png",
   "layouts": [
     {
       "source": "questions.json",
       "type": "complex",
-      "front-image": "quiz_front.jpg",
+      "front-image": "question_front.png",
       "texts": [
         {
           "name": "question",
@@ -185,22 +187,37 @@ on a card will be filled with a question from ```questions.json``` and the
 "answer" field on the same card will hold the corresponding answer.
 
 Any options that are valid for the simple text labels are also valid for the
-labels in a complex layut.
+labels in a complex layout.
+
+## Multi-layout card games
+Games like Fluxx have multiple types of card, with different designs.
+For such games, it is possible to define multiple layouts in the same JSON file.
+We note that the "layouts" field is a list - each object in the list is a separate
+card layout (either simple or complex). The generator will create as many cards
+as possible for each layout (continuing until there isn't content for any more cards)
+and put them in the same deck grid.
+
+For an example of how this works, look at ```fluxx/fluxx.json```.
+
+Each of the layouts has its own "front-image" directive, giving each card layout its
+own custom background. If a global front-image is also included at the top-level,
+this is drawn at the bottom of all cards. PNGs with transparency are supported,
+allowing the per-layout image to composite with the global front-image.
 
 
 ## Invocation
 When you have a card design (the JSON file and images) and a deck (a named
 directory with text files in it), you can generate the deck grid for Tabletop
-Sim by invoking the script.  Let's say I've come up with a set of new white
-cards with animal themes for CaH, written a JSON file (`cah-white.json`) and
-created the deck directory (`cah-animals/`) with a text file in it.
+Sim by invoking the script.  Let's say I've come up with a set of cards with
+animal themes for Fluxx, written a JSON file (`fluxx.json`) and created the
+deck directory (`animals/`) with card contents.
 
 ```bash
-$ Cardcinogen.py --template cards-against-humanity/cah-white.json --deck cards-against-humanity/animals --output-prefix cah_animal_deck_
+$ Cardcinogen.py --template fluxx/fluxx.json --deck fluxx/cards
 ```
 
 The script will generate one or more jpeg images (there can be a maximum of 69
-cards per image) named `cah_animal_deck_01.jpeg`, `cah_animal_deck_02.jpeg`, and
+cards per image) named `fluxx_cards_01.jpeg`, `fluxx_cards_02.jpeg`, and
 so on.
 
 These images can be imported as decks in Tabletop Sim.  Please note that the

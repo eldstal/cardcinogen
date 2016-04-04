@@ -9,45 +9,36 @@
               "texts": [
                   {
                       "name": "header",
-                      "x": 165,
+                      "x": 160,
                       "y": 137,
-                      "width": 410,
+                      "width": 460,
                       "height": 600,
-                      "line-spacing": -5,
                       "color": "#000000",
-                      "font-face": "TeXGyreHeros-regular",
-                      "font-size": 30,
-                      "font-weight": "normal",
-                      "rotation": 0,
-                      "wordwrap": true
+                      "font-face": "Liberation Serif",
+                      "font-size": 32
                   },
                   {
                       "name": "title",
-                      "x": 165,
-                      "y": 285,
-                      "width": 600,
+                      "x": 160,
+                      "y": 429,
+                      "width": 460,
                       "height": 600,
                       "line-spacing": -10,
                       "color": "#000000",
                       "font-face": "TeXGyreHeros-bold",
                       "font-size": 65,
                       "font-weight": "bold",
-                      "rotation": 0,
-                      "wordwrap": true
+                      "y-align": "bottom"
                   },
                   {
                       "name": "description",
-                      "x": 165,
+                      "x": 160,
                       "y": 485,
-                      "width": 350,
+                      "width": 460,
                       "height": 800,
-                      "line-spacing": -3,
                       "color": "#000000",
-                      "font-face": "TeXGyreHeros-regular",
-                      "font-size": 35,
-                      "font-weight": "bold",
-                      "rotation": 0,
-                      "wordwrap": true
+                      "font-face": "Liberation Serif",
+                      "font-size": 32
                   },
                   {
                       "name": "spine",
@@ -55,14 +46,65 @@
                       "y": 135,
                       "width": 808,
                       "height": 100,
-                      "line-spacing": -20,
                       "color": "#000000",
                       "font-face": "TeXGyreHeros-bold",
                       "font-size": 63,
                       "rotation": 90,
                       "wordwrap": false,
-                      "x-align": "left",
-                      "y-align": "top",
+                      "font-weight": "bold"
+                  }
+              ]
+          },
+
+          {
+              "source": "creepers.json",
+              "type": "complex",
+              "front-image": "Fluxx_front_creeper.jpg",
+              "texts": [
+                  {
+                      "name": "header",
+                      "x": 160,
+                      "y": 137,
+                      "width": 460,
+                      "height": 600,
+                      "color": "#000000",
+                      "font-face": "Liberation Serif",
+                      "font-size": 32
+                  },
+                  {
+                      "name": "title",
+                      "x": 160,
+                      "y": 429,
+                      "width": 460,
+                      "height": 600,
+                      "line-spacing": -10,
+                      "color": "#000000",
+                      "font-face": "TeXGyreHeros-bold",
+                      "font-size": 65,
+                      "font-weight": "bold",
+                      "y-align": "bottom"
+                  },
+                  {
+                      "name": "description",
+                      "x": 160,
+                      "y": 485,
+                      "width": 460,
+                      "height": 800,
+                      "color": "#000000",
+                      "font-face": "Liberation Serif",
+                      "font-size": 32
+                  },
+                  {
+                      "name": "spine",
+                      "x": 69,
+                      "y": 135,
+                      "width": 808,
+                      "height": 100,
+                      "color": "#FFFFFF",
+                      "font-face": "TeXGyreHeros-bold",
+                      "font-size": 63,
+                      "rotation": 90,
+                      "wordwrap": false,
                       "font-weight": "bold"
                   }
               ]
