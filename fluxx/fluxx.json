@@ -10,7 +10,7 @@
                   {
                       "name": "header",
                       "x": 165,
-                      "y": 140,
+                      "y": 137,
                       "width": 410,
                       "height": 600,
                       "line-spacing": -5,
@@ -51,18 +51,18 @@
                   },
                   {
                       "name": "spine",
-                      "x": 91,
-                      "y": 938,
+                      "x": 69,
+                      "y": 135,
                       "width": 808,
                       "height": 100,
                       "line-spacing": -20,
                       "color": "#000000",
                       "font-face": "TeXGyreHeros-bold",
-                      "font-size": 60,
+                      "font-size": 63,
                       "rotation": 90,
                       "wordwrap": false,
-                      "x-align": "center",
-                      "y-align": "bottom",
+                      "x-align": "left",
+                      "y-align": "top",
                       "font-weight": "bold"
                   }
               ]
