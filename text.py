@@ -166,45 +166,6 @@ class TextLabel:
 
     return image
 
-class TextLabelComplex:
-  """ Parsed version of a complex text-label object """
-
-  def __init__(self, json, rootdir):
-    self.source =       util.get_default(json, "source", "text.json")
-    self.type =         util.get_default(json, "type", "simple")
-    self.frontSource =  util.get_default(json, "front", "")
-    self.subLabelSpecs =    util.get_default(json, "texts", [])
-    self.directory =    rootdir
-
-    self.subLabels = {}
-    for spec in self.subLabelSpecs:
-      name = util.get_default(spec, "name", "")
-      self.subLabels[name] = TextLabel(spec)
-
-
-
-  def render(self, dimensions, texts):
-    """ Generate a transparent PIL card layer with the text on it """
-
-    image = Image.new("RGBA", dimensions, (0,0,0,0))
-    if (self.frontSource != ""):
-      path = os.path.join(self.directory, self.frontSource)
-      front = Image.open(path, 'r')
-      image.paste(front, (0,0))
-
-    for name,label in self.subLabels.items():
-
-      text = util.get_default(texts, name, "")
-
-      rendered_text = label.render(dimensions, text)
-      if (rendered_text is None):
-        sys.stderr.write("Failed to render sub-label %s.\n" % name)
-        return None
-
-      image.paste(rendered_text, (0, 0), mask=rendered_text)
-
-    return image
-
 
 class TextGenerator:
 
@@ -213,7 +174,7 @@ class TextGenerator:
     self.loaded = {}
 
 
-  def gen(self, filename):
+  def gen_simple(self, filename):
     """ Fetch one line from a given text file in the deck directory """
     if (filename not in self.loaded):
       path = os.path.join(self.directory, filename)

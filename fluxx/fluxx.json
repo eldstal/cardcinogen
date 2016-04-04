@@ -1,11 +1,11 @@
 {
     "front-image": "Fluxx_front.jpg",
     "hidden-image": "Fluxx_hidden.jpg",
-    "layout": [
+    "layouts": [
           {
               "source": "actions.json",
               "type": "complex",
-              "front": "Fluxx_front_actions.jpg",
+              "front-image": "Fluxx_front_actions.jpg",
               "texts": [
                   {
                       "name": "header",

@@ -6,25 +6,9 @@ import sys
 
 import util
 from PIL import Image
-from text import TextLabel, TextLabelComplex
+from text import TextLabel
+from layout import SimpleLayout, ComplexLayout
 
-# If the loaded image is None, return a default of the specified dimensions
-# If accept_dimension is specified, scale non-matching image to that size
-def default_image(path, default_dimension, accept_dimension=None):
-  try:
-    loaded = Image.open(path)
-    loaded.load()
-  except:
-    sys.stderr.write("Unable to load image %s. Falling back to plain.\n" % path)
-    return Image.new("RGBA", default_dimension, (230, 230, 255, 255))
-
-  if (accept_dimension != None):
-    if (loaded.size != accept_dimension):
-      sys.stderr.write("Image sizes not matching. Resizing to %d x %d\n" % accept_dimension)
-      return loaded.resize(accept_dimension, Image.BICUBIC)
-
-  # Image is good enough as it is.
-  return loaded
 
 
 class CardTemplate:
@@ -33,50 +17,43 @@ class CardTemplate:
     self.front_name =   util.get_default(json, "front-image", "front.png")
     self.hidden_name =  util.get_default(json, "hidden-image", "hidden.png")
 
-    self.labels = []
-    for j in util.get_default(json, "layout", []):
+    self.layouts = []
+    for j in util.get_default(json, "layouts", []):
       self.type = util.get_default(j, "type", "simple")
-      if (self.type == "simple"):
-        self.labels.append(TextLabel(j))
-      elif (self.type == "complex"):
-        self.labels.append(TextLabelComplex(j, rootdir))
+      if (self.type == "complex"):
+        self.layouts.append(ComplexLayout(j, rootdir))
+      else:
+        self.layouts.append(SimpleLayout(j, rootdir))
 
     front_path  = os.path.join(rootdir, self.front_name)
     hidden_path = os.path.join(rootdir, self.hidden_name)
 
     # Make sure we have valid images and they all have matching sizes
-    self.front   = default_image(front_path, (372, 520))
-    self.hidden  = default_image(hidden_path, self.front.size, self.front.size)
+    self.front   = util.default_image(front_path, (372, 520))
+    self.hidden  = util.default_image(hidden_path, self.front.size, self.front.size)
 
   def make_card(self, textgen):
     """ Generate a single card """
+
+    if (len(self.layouts) == 0):
+      sys.stderr.write("Warning: No layouts specified.")
+      return None
+
     face = self.front.copy()
-    for l in self.labels:
-      overlay = None
+    for l in self.layouts:
 
-      # Some text strings may fail to render (not fit within the label boundary).
-      # Those will be rendered as None, so we draw a new text string and try again.
-      while (overlay is None):
-        if (l.type == "simple"):
-          text = textgen.gen(l.source)  # A unique string for this label
+      overlay = l.render(face.size, textgen)
+      if (overlay is None):
+        # This layout is done generating cards.
+        # This happens when, eventually, textgen runs out of card texts for a given layout.
+        continue
 
-          if (text is None):
-            # End of file
-            return None
-
-          overlay = l.render(face.size, text)
-        else:
-          texts = textgen.gen_complex(l.source)  # A set of strings for this label
-
-          if (texts is None):
-            # End of file
-            return None
-
-          overlay = l.render(face.size, texts)
-
+      # We have a card! Return it and that's that.
       face.paste(overlay, mask=overlay)
+      return face
 
-    return face
+    # None of the layouts can generate any cards. We're done.
+    return None
 
 
 

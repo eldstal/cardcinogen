@@ -25,7 +25,7 @@ Templates are included for Concept, Fluxx and CaH in the corresponding directori
 
 ## Simple Cards
 Games where cards simply have one or more random text strings on them (Concept, CaH, Charades, ...)
-are supported using the "simple" deck type.
+are supported using the "simple" layout type.
 
 ### Defining a deck
 A deck is a collection of unique cards, which will generate one or more large
@@ -50,9 +50,8 @@ Nobody has ever heard an invisible harpsichord.
 ```
 
 ### Designing a card
-The card layout (which is identical for all cards in the deck) is specified
-using three images (front, hidden and back) and a JSON file which defines the
-dynamic aspects of the card.
+The card layout is specified using two images (front, hidden) and a JSON structure
+which defines the dynamic aspects of the card.
 
 The format of the JSON file is as follows:
 
@@ -62,28 +61,32 @@ The format of the JSON file is as follows:
     "back-image": "back.jpeg",
     "front-image": "front.jpeg",
     "hidden-image": "hidden.jpeg",
-    "layout": [
+    "layouts": [
         {
-            "source": "music.txt",
-            "x": 20,
-            "y": 35,
-            "width": 180,
-            "height": 300,
-            "color": "#ff0000",
-            "font-face": "Liberty Sans",
-            "font-size": 12,
-            "font-weight": "regular",
-            "justify": "center",
-            "x-align": "center",
-            "y-align": "bottom",
-            "line-spacing": 4
-        },
-        
-        {
-            "source": "history.txt",
-            "x": 20,
-            "y": 50,
-            "rotation": 4
+            "texts": [
+                {
+                    "source": "music.txt",
+                    "x": 20,
+                    "y": 35,
+                    "width": 180,
+                    "height": 300,
+                    "color": "#ff0000",
+                    "font-face": "Liberty Sans",
+                    "font-size": 12,
+                    "font-weight": "regular",
+                    "justify": "center",
+                    "x-align": "center",
+                    "y-align": "bottom",
+                    "line-spacing": 4
+                },
+                
+                {
+                    "source": "history.txt",
+                    "x": 20,
+                    "y": 50,
+                    "rotation": 4
+                }
+            ]
         }
     ]
 }
@@ -152,11 +155,11 @@ The layout of a card with a JSON source is specified as follows:
 {
   "front-image": "quiz_front.jpg",
   "hidden-image": "quiz_hidden.jpg",
-  "layout": [
+  "layouts": [
     {
       "source": "questions.json",
       "type": "complex",
-      "front": "quiz_front.jpg",
+      "front-image": "quiz_front.jpg",
       "texts": [
         {
           "name": "question",

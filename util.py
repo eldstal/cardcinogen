@@ -12,6 +12,23 @@ def get_default(dic, k, fallback, cast=None):
   if (cast is not None): retval = cast(retval)
   return retval
 
+# If the image can't be loaded, return a default of the specified dimensions
+# If accept_dimension is specified, scale non-matching image to that size
+def default_image(path, default_dimension=(300,800), accept_dimension=None):
+  try:
+    loaded = Image.open(path)
+    loaded.load()
+  except:
+    sys.stderr.write("Unable to load image %s. Falling back to plain.\n" % path)
+    return Image.new("RGBA", default_dimension, (230, 230, 255, 255))
+
+  if (accept_dimension != None):
+    if (loaded.size != accept_dimension):
+      sys.stderr.write("Image sizes not matching. Resizing to %d x %d\n" % accept_dimension)
+      return loaded.resize(accept_dimension, Image.BICUBIC)
+
+  # Image is good enough as it is.
+  return loaded
 
 def rotate_image(image, rotation):
   """ Rotate a PIL image, returning a minimal bounding image """
@@ -53,7 +70,7 @@ def aligned_maxdims(origin, dims, container_dims, alignment_x="left", alignment_
   # This needs to take into account the alignment (X)
   maxwidth = min(cw - x, w)
   if (alignment_x == "center"):
-    maxwidth = min(2*x, 2*(cw - x))     # Edges of the card
+    maxwidth = min(2*x, 2*(cw - x))                 # Edges of the container
     maxwidth = min(maxwidth, w)                     # Specified width
 
   elif (alignment_x == "right"):
@@ -62,7 +79,7 @@ def aligned_maxdims(origin, dims, container_dims, alignment_x="left", alignment_
   # Likewise, we need to find the max height including the edges of the card.
   maxheight = min(ch - y, h)
   if (alignment_y == "center"):
-    maxheight = min(2*y, 2*(ch - y))   # Edges of the card
+    maxheight = min(2*y, 2*(ch - y))              # Edges of the container
     maxheight = min(maxheight, h)                 # Specified height
 
   elif (alignment_y == "bottom"):

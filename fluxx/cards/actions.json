@@ -16,11 +16,17 @@
     "title": "Draw 3, play 2 of them",
     "spine": "DRAW 3, PLAY 2 OF THEM",
     "description": "Set your hand aside.\nDraw 3 cards and play 2 of them. Discard the third and continue with your turn.\n\nThis card, and all cards played becase of it, are counted as a single play."
-  },  
+  },
   {
     "header": "To play this card, do whatever it says, then place it on the discard pile.",
     "title": "Trash a New Rule",
     "spine": "TRASH A NEW RULE",
+    "description": "Select one of the New Rules cards in play and place it in the discard pile."
+  },
+  {
+    "header": "This card isn't intended to be generated, due to its labels being too long.",
+    "title": "Trash a New Rule",
+    "spine": "TOTALLY TOO LONG OF A SPINE",
     "description": "Select one of the New Rules cards in play and place it in the discard pile."
   }
 ]
