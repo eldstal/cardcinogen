@@ -110,30 +110,17 @@ class TextLabel:
     # If the user has set a max width, respect that.
     # If not, we use the edge of the card.
 
-    if (self.rotation != 0):
+    if (self.rotation == 0):
+      maxwidth, maxheight = util.aligned_maxdims((self.x, self.y),
+                                                 (self.width, self.height),
+                                                 card_dims,
+                                                 self.alignment,
+                                                 self.baseline)
+    else:
       # Due to rotation of the text, we don't fully take the card's edges into account.
       maxdim = max(card_dims)
       maxwidth = min(self.width, maxdim)
       maxheight = min(self.height, maxdim)
-
-    else:
-      # This needs to take into account the alignment (X)
-      maxwidth = min(card_dims[0] - self.x, self.width)
-      if (self.alignment == "center"):
-        maxwidth = min(2*self.x, 2*(card_dims[0] - self.x))     # Edges of the card
-        maxwidth = min(maxwidth, self.width)                     # Specified width
-
-      elif (self.alignment == "right"):
-        maxwidth = min(self.x, self.width)
-
-      # Likewise, we need to find the max height including the edges of the card.
-      maxheight = min(card_dims[1] - self.y, self.height)
-      if (self.baseline == "center"):
-        maxheight = min(2*self.y, 2*(card_dims[1] - self.y))   # Edges of the card
-        maxheight = min(maxheight, self.height)                 # Specified height
-
-      elif (self.baseline == "bottom"):
-        maxheight = min(self.y, self.height)
 
     # Split the text into lines, in a way that fits our width
     lines = [text]
@@ -160,23 +147,10 @@ class TextLabel:
       return None
 
     if (self.rotation != 0):
-      # Give enough space in all directions to properly rotate
-      maxdim = max(label.height, label.width)
-      rotimg = Image.new("RGBA", (maxdim*2, maxdim*2), (0, 0, 0, 0))
-      rotimg.paste(label, (maxdim, maxdim), mask=label)
-      rotimg = rotimg.rotate(self.rotation)
-      # Trim off the excess
-      label = rotimg.crop(rotimg.getbbox())
+      label = util.rotate_image(label, self.rotation)
 
-    # Baseline affects the Y coordinate of our text origin
-    y = self.y
-    if (self.baseline == "center"): y = int(self.y - (label.height/2))
-    if (self.baseline == "bottom"): y = int(self.y - label.height)
-
-    # Alignment affects the X coordinate of our origin
-    x = self.x
-    if (self.alignment == "center"): x = int(self.x - (label.width/2))
-    if (self.alignment == "right"): x = int(self.x - label.width)
+    # Figure out where to place the top-left corner of the label
+    x,y = util.alignment_to_absolute((self.x, self.y), label.size, self.alignment, self.baseline)
 
     if (x < 0 or y < 0 or
         x + label.width > card_dims[0] or
