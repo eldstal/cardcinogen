@@ -42,7 +42,7 @@
                   },
                   {
                       "name": "spine",
-                      "x": 69,
+                      "x": 92,
                       "y": 135,
                       "width": 808,
                       "height": 100,
@@ -50,6 +50,7 @@
                       "font-face": "TeXGyreHeros-bold",
                       "font-size": 63,
                       "rotation": 90,
+                      "x-align": "center",
                       "wordwrap": false,
                       "font-weight": "bold"
                   }
@@ -96,7 +97,7 @@
                   },
                   {
                       "name": "spine",
-                      "x": 69,
+                      "x": 92,
                       "y": 135,
                       "width": 808,
                       "height": 100,
@@ -104,6 +105,7 @@
                       "font-face": "TeXGyreHeros-bold",
                       "font-size": 63,
                       "rotation": 90,
+                      "x-align": "center",
                       "wordwrap": false,
                       "font-weight": "bold"
                   }
