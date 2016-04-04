@@ -36,7 +36,7 @@
                       "wordwrap": true
                   },
                   {
-                  	"name": "description",
+                      "name": "description",
                       "x": 165,
                       "y": 485,
                       "width": 350,
@@ -61,8 +61,8 @@
                       "font-size": 60,
                       "rotation": 90,
                       "wordwrap": false,
-                      "alignment": "center",
-                      "baseline": "bottom",
+                      "x-align": "center",
+                      "y-align": "bottom",
                       "font-weight": "bold"
                   }
               ]

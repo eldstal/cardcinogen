@@ -38,7 +38,7 @@ def wrap_pixel_width(text, maxwidth, font, linesep='\n'):
   return ret
 
 # Generate a label-image of a size that fits the text and render it
-def render_lines(lines, font, color="#000000", alignment="left", spacing=4):
+def render_lines(lines, font, color="#000000", justify="left", spacing=4):
   width = 0
   height = 0
 
@@ -48,6 +48,8 @@ def render_lines(lines, font, color="#000000", alignment="left", spacing=4):
     width = max(w, width)
     height = height + h + spacing
 
+  # Some fonts render outside that calculated size, for some reason.
+  # Give them some margins and crop it off later.
   image = Image.new("RGBA", (width*2, height*2), (0,0,0,0))
   draw = ImageDraw.Draw(image)
 
@@ -58,8 +60,8 @@ def render_lines(lines, font, color="#000000", alignment="left", spacing=4):
 
     # Alignment affects each line of text differently.
     x = 0
-    if (alignment == "center"): x = (width - w) / 2
-    if (alignment == "right"): x = width - w
+    if (justify == "center"): x = (width - w) / 2
+    if (justify == "right"): x = width - w
 
     draw.text((x, y), l, font=font, fill=color)
     y += h + spacing
@@ -73,21 +75,22 @@ class TextLabel:
 
   def __init__(self, json):
     """ Parse out the various settings of a text label and clean them up """
-    self.source =    util.get_default(json, "source", "text.txt")
-    self.type =      util.get_default(json, "type", "simple")
-    self.x =         util.get_default(json, "x", 10, int)
-    self.y =         util.get_default(json, "y", 10, int)
-    self.width =     util.get_default(json, "width", 40000, int)
-    self.height =    util.get_default(json, "height", 40000, int)
-    self.color =     util.get_default(json, "color", "#000000")
-    self.fontface =  util.get_default(json, "font-face", "sans")
-    self.fontsize =  util.get_default(json, "font-size", 12, int)
-    self.spacing =   util.get_default(json, "line-spacing", 4, int)
-    self.alignment = util.get_default(json, "alignment", "left")
-    self.baseline =  util.get_default(json, "baseline", "top")
-    self.wordwrap =  util.get_default(json, "wordwrap", True, bool)
-    self.rotation =  util.get_default(json, "rotation", 0, int)
-    weight =         util.get_default(json, "font-weight", "regular")
+    self.source =     util.get_default(json, "source", "text.txt")
+    self.type =       util.get_default(json, "type", "simple")
+    self.x =          util.get_default(json, "x", 10, int)
+    self.y =          util.get_default(json, "y", 10, int)
+    self.width =      util.get_default(json, "width", 40000, int)
+    self.height =     util.get_default(json, "height", 40000, int)
+    self.color =      util.get_default(json, "color", "#000000")
+    self.fontface =   util.get_default(json, "font-face", "sans")
+    self.fontsize =   util.get_default(json, "font-size", 12, int)
+    self.spacing =    util.get_default(json, "line-spacing", 4, int)
+    self.justify =    util.get_default(json, "justify", "left")
+    self.x_align =    util.get_default(json, "x-align", "left")
+    self.y_align =    util.get_default(json, "y-align", "top")
+    self.wordwrap =   util.get_default(json, "wordwrap", True, bool)
+    self.rotation =   util.get_default(json, "rotation", 0, int)
+    weight =          util.get_default(json, "font-weight", "regular")
 
     self.fontweight = sysfont.STYLE_NORMAL
     if (weight == "bold"):   self.fontweight = sysfont.STYLE_BOLD
@@ -114,8 +117,8 @@ class TextLabel:
       maxwidth, maxheight = util.aligned_maxdims((self.x, self.y),
                                                  (self.width, self.height),
                                                  card_dims,
-                                                 self.alignment,
-                                                 self.baseline)
+                                                 self.x_align,
+                                                 self.y_align)
     else:
       # Due to rotation of the text, we don't fully take the card's edges into account.
       maxdim = max(card_dims)
@@ -135,7 +138,7 @@ class TextLabel:
     label = render_lines(lines,
                          font=self.font,
                          color=self.color,
-                         alignment=self.alignment,
+                         justify=self.justify,
                          spacing=self.spacing)
 
     if (label.width > maxwidth):
@@ -150,7 +153,7 @@ class TextLabel:
       label = util.rotate_image(label, self.rotation)
 
     # Figure out where to place the top-left corner of the label
-    x,y = util.alignment_to_absolute((self.x, self.y), label.size, self.alignment, self.baseline)
+    x,y = util.alignment_to_absolute((self.x, self.y), label.size, self.x_align, self.y_align)
 
     if (x < 0 or y < 0 or
         x + label.width > card_dims[0] or
@@ -211,6 +214,7 @@ class TextGenerator:
 
 
   def gen(self, filename):
+    """ Fetch one line from a given text file in the deck directory """
     if (filename not in self.loaded):
       path = os.path.join(self.directory, filename)
       handle = open(path, "r")
@@ -226,6 +230,7 @@ class TextGenerator:
     return line
 
   def gen_complex(self, filename):
+    """ Fetch an entire card (named fields) from a JSON file in the deck directory """
     if (filename not in self.loaded):
       path = os.path.join(self.directory, filename)
       handle = open(path, "r")
@@ -258,10 +263,10 @@ class TestTextStuff(unittest.TestCase):
     self.assertEqual(lab_default.fontsize, 12)
     self.assertEqual(lab_default.fontweight, sysfont.STYLE_NORMAL)
     self.assertEqual(lab_default.spacing, 4)
-    self.assertEqual(lab_default.alignment, "left")
+    self.assertEqual(lab_default.justify, "left")
     self.assertEqual(lab_default.rotation, 0)
     self.assertEqual(lab_default.wordwrap, True)
-    self.assertEqual(lab_default.baseline, "top")
+    self.assertEqual(lab_default.y_align, "top")
 
     # This one overrides every possible setting
     dic = {
@@ -275,10 +280,11 @@ class TestTextStuff(unittest.TestCase):
       "font-size": 32,
       "font-weight": "bold",
       "line-spacing": 12,
-      "alignment": "center",
+      "justify": "center",
       "rotation": 90,
       "wordwrap": False,
-      "baseline": "bottom"
+      "x-align": "right",
+      "y-align": "bottom"
     }
 
     lab_override = TextLabel(dic)
@@ -293,10 +299,11 @@ class TestTextStuff(unittest.TestCase):
     self.assertEqual(lab_override.fontsize, dic["font-size"])
     self.assertEqual(lab_override.fontweight, sysfont.STYLE_BOLD)
     self.assertEqual(lab_override.spacing, dic["line-spacing"])
-    self.assertEqual(lab_override.alignment, dic["alignment"])
+    self.assertEqual(lab_override.justify, dic["justify"])
     self.assertEqual(lab_override.rotation, dic["rotation"])
     self.assertEqual(lab_override.wordwrap, dic["wordwrap"])
-    self.assertEqual(lab_override.baseline, dic["baseline"])
+    self.assertEqual(lab_override.x_align, dic["x-align"])
+    self.assertEqual(lab_override.y_align, dic["y-align"])
 
   def test_render_text(self):
     lab_default = TextLabel({ "color": "#AABBCC" })

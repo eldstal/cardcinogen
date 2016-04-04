@@ -73,8 +73,9 @@ The format of the JSON file is as follows:
             "font-face": "Liberty Sans",
             "font-size": 12,
             "font-weight": "regular",
-            "alignment": "right",
-            "baseline": "center",
+            "justify": "center",
+            "x-align": "center",
+            "y-align": "bottom",
             "line-spacing": 4
         },
         
@@ -94,14 +95,18 @@ Both of these files must be present in the deck directory.
 
 The size of the cards will be equal to the size of the front-image.
 
-The x value of a label determines its horizontal position. If the alignment is
-"left" (default), this is the left-hand edge of the text. If the alignment is "center"
+The x value of a label determines its horizontal position. If the x-align is
+"left" (default), this is the left-hand edge of the text. If the x-align is "center"
  or "right", the x-coordinate determines the center line and the right-hand edge respectively.
 
-The y value works the same way, with the baseline being "top" (top edge of text), "center"
+The y value works the same way, with the "y-align" property being "top" (top edge of text), "center"
 (vertical centering) or "bottom" (the bottom edge of text).
 
 These positions are relative to the top-left corner of the card.
+
+The "justify" property ("left", "center" or "right") determines how lines of text are
+rendered. Note that this does NOT affect the placement of the label. Typically, if you
+are using "justify":"center", you also want "x-align":"center".
 
 All label properties are optional.
 
