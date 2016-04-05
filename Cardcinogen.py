@@ -9,7 +9,7 @@ import argparse
 from PIL import Image
 
 from card import CardTemplate
-from text import TextLabel, TextGenerator
+from content import ContentGenerator
 from tiler import CardTiler
 
 def main():
@@ -40,7 +40,7 @@ def main():
     conf.output_prefix = template_name + "_" + deck_name + "_"
 
   # Keeps track of the next piece of text in each opened file.
-  textgen = TextGenerator(conf.deck)
+  textgen = ContentGenerator(conf.deck)
 
   # Load the JSON template
   try:

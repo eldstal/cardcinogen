@@ -109,6 +109,14 @@
                       "wordwrap": false,
                       "font-weight": "bold"
                   }
+              ],
+              "images": [
+                  {
+                      "name": "figure",
+                      "x": 430,
+                      "y": 760,
+                      "height": 205
+                  }
               ]
           }
     ]

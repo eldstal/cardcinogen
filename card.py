@@ -6,7 +6,6 @@ import sys
 
 import util
 from PIL import Image
-from text import TextLabel
 from layout import SimpleLayout, ComplexLayout
 
 

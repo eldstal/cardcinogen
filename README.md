@@ -205,9 +205,86 @@ this is drawn at the bottom of all cards. PNGs with transparency are supported,
 allowing the per-layout image to composite with the global front-image.
 
 
+## Images on cards
+Both the "simple" and "complex" layout supports images loaded from the deck directory
+and placed on the card. This is done with the "images" list, which is specified much
+like the "texts" list in either layout.
+
+```json
+{
+  "front-image": "card_front.png",
+  "hidden-image": "card_hidden.png",
+  "layouts": [
+    {
+      "source": "famous_people.json",
+      "type": "complex",
+      "front-image": "people_front.png",
+      "texts": [
+        {
+          "name": "person",
+          "x": 32,
+          "y": 80,
+          "font-size": 36
+        }
+      ],
+      "images": [
+        {
+          "name": "face",
+          "x": 32,
+          "y": 80,
+          "width": 400,
+        },
+        {
+          "name": "logo",
+          "static": "question_mark.png"
+          "x": 100,
+          "y": 10,
+          "x-align": "right",
+          "y-align": "top",
+          "width": 400,
+        }
+      ]
+    }
+
+  ]
+}
+
+```
+
+Image labels support the same placement, alignment and rotation options as text labels.
+
+If either "width" or "height" is specified, the image is scaled proportionally to fit the
+specified size. If both are specified, the image is stretched to fit these dimensions.
+
+In the complex layout, the image's "name" property is used in the deck JSON file to
+specify the filename of the image used on each individual card:
+
+```deck/famous_people.json```
+```json
+[
+  {
+    "person": "Donny Osmond",
+    "face": "donny.jpg"
+  },
+  {
+    "person": "Priscilla Presley",
+    "face": "priscilla.jpg"
+  },
+]
+```
+
+These image files are located in the deck directory.
+
+If an image is present in the layout but not specified on the card, the image is not included
+in the layout. This is not an error in the design - some cards might simply not need an image there.
+
+If the image filename is the same for all cards using the layout, it can be set in the image label's "static" property, as illustrated above. Notice that none of the cards in the deck actually specifies a "logo" field - that image is static.
+
+In the simple layout each image label has a "source" text file just like the text labels. Each line in this file is the filename of an image and these are used sequentially just like the texts.
+
 ## Invocation
 When you have a card design (the JSON file and images) and a deck (a named
-directory with text files in it), you can generate the deck grid for Tabletop
+directory with text files and images in it), you can generate the deck grid for Tabletop
 Sim by invoking the script.  Let's say I've come up with a set of cards with
 animal themes for Fluxx, written a JSON file (`fluxx.json`) and created the
 deck directory (`animals/`) with card contents.

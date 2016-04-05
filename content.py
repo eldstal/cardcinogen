@@ -79,7 +79,6 @@ class TextLabel:
   def __init__(self, json):
     """ Parse out the various settings of a text label and clean them up """
     self.source =     util.get_default(json, "source", "text.txt")
-    self.type =       util.get_default(json, "type", "simple")
     self.x =          util.get_default(json, "x", 10, int)
     self.y =          util.get_default(json, "y", 10, int)
     self.width =      util.get_default(json, "width", 40000, int)
@@ -170,44 +169,128 @@ class TextLabel:
     return image
 
 
-class TextGenerator:
+class ImageLabel:
+  """ Parsed version of a single image-label object """
+
+  def __init__(self, json):
+    """ Parse out the various settings of a text label and clean them up """
+    self.name =       util.get_default(json, "name", "image")           # Only used in complex layout
+    self.source =     util.get_default(json, "source", "images.txt")    # Only used in simple layout
+    self.static =     util.get_default(json, "static", None)            # Optional, used by layout.
+    self.x =          util.get_default(json, "x", 10, int)
+    self.y =          util.get_default(json, "y", 10, int)
+    self.width =      util.get_default(json, "width", 0, int)
+    self.height =     util.get_default(json, "height", 0, int)
+    self.x_align =    util.get_default(json, "x-align", "left")
+    self.y_align =    util.get_default(json, "y-align", "top")
+    self.rotation =   util.get_default(json, "rotation", 0, int)
+
+  def render(self, card_dims, image):
+    """ Generate a transparent PIL card layer with the image on it """
+
+    # Since images aren't wrapped, we simply accept the user's scaling 
+    # settings or (if they are 0), use the image's own dimensions.
+    # If the image falls outside the card boundaries, we warn but allow it.
+
+    w, h = image.size
+    aspect = w/h
+
+    if (self.width == 0 and self.height == 0):
+      # No scaling, use image as-is
+      pass
+    else:
+      scalew,scaleh = self.width, self.height
+
+      if (scalew == 0):
+        # Proportional scaling to given height
+        scalew = round(scaleh * aspect)
+
+      if (scaleh == 0):
+        scaleh = round(scalew / aspect)
+
+      image = image.resize((scalew, scaleh), Image.ANTIALIAS)
+
+
+    if (self.rotation != 0):
+      image = util.rotate_image(image, self.rotation)
+
+    # Figure out where to place the top-left corner of the label
+    x,y = util.alignment_to_absolute((self.x, self.y), image.size, self.x_align, self.y_align)
+
+    if (x < 0 or y < 0 or
+        x + image.width > card_dims[0] or
+        y + image.height > card_dims[1]):
+      sys.stderr.write("Warning: Image label overflows card boundary")
+
+    card = Image.new("RGBA", card_dims, (0,0,0,0))
+    card.paste(image, (x,y), mask=image)
+
+    return card
+
+
+class ContentGenerator:
+  """ Loads and caches files (text, JSON and images) from the deck directory """
 
   def __init__(self, directory):
     self.directory = directory
-    self.loaded = {}
+    self.loaded_texts = {}
+    self.loaded_json = {}
+    self.loaded_images = {}
 
 
-  def gen_simple(self, filename):
+  def gen_text_simple(self, filename):
     """ Fetch one line from a given text file in the deck directory """
-    if (filename not in self.loaded):
+    if (filename not in self.loaded_texts):
       path = os.path.join(self.directory, filename)
       handle = open(path, "r")
       if (handle is None):
         sys.stderr.write("Unable to open text file %s\n" % path)
         return None
-      self.loaded[filename] = handle
+      self.loaded_texts[filename] = handle
 
-    line = self.loaded[filename].readline().rstrip()
+    line = self.loaded_texts[filename].readline().rstrip()
     if (line == ""):
       # End of file
       return None
     return line
 
-  def gen_complex(self, filename):
+  def gen_text_complex(self, filename):
     """ Fetch an entire card (named fields) from a JSON file in the deck directory """
-    if (filename not in self.loaded):
+    if (filename not in self.loaded_json):
       path = os.path.join(self.directory, filename)
       handle = open(path, "r")
       if (handle is None):
         sys.stderr.write("Unable to open json file %s\n" % path)
         return None
-      self.loaded[filename] = json.load(handle)
+      self.loaded_json[filename] = json.load(handle)
 
-    if (len(self.loaded[filename]) == 0):
+    if (len(self.loaded_json[filename]) == 0):
       #End of file
       return None
-    texts = self.loaded[filename].pop()
+    texts = self.loaded_json[filename].pop(0)
     return texts
+
+  def load_image(self, filename):
+    if (filename not in self.loaded_images):
+      path = os.path.join(self.directory, filename)
+      try:
+        image = Image.open(path)
+        image.load()
+      except:
+        sys.stderr.write("Unable to load image %s\n" % path)
+        return None
+      self.loaded_images[filename] = image
+
+    return self.loaded_images[filename].copy()
+
+  def gen_image_simple(self, source):
+    filename = self.gen_text_simple(source)
+    if (filename is None):
+      # Ran out of image names in that text file.
+      # This is analogous to running out of text for a label - no warning.
+      return None
+
+    return self.load_image(filename)
 
 #
 # Unit tests

@@ -38,7 +38,9 @@ def rotate_image(image, rotation):
   # Give enough space in all directions to properly rotate
   maxdim = max(image.height, image.width)
   rotimg = Image.new("RGBA", (maxdim*2, maxdim*2), (0, 0, 0, 0))
-  rotimg.paste(image, (maxdim, maxdim), mask=image)
+  rotimg.paste(image,
+               (maxdim - int(image.width/2), maxdim - int(image.height/2)),  # Center the image
+               mask=image)
   rotimg = rotimg.rotate(rotation)
 
   # Trim off the excess
