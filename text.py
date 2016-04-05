@@ -85,8 +85,8 @@ class TextLabel:
     self.width =      util.get_default(json, "width", 40000, int)
     self.height =     util.get_default(json, "height", 40000, int)
     self.color =      util.get_default(json, "color", "#000000")
-    self.fontface =   util.get_default(json, "font-face", "sans")
-    self.fontsize =   util.get_default(json, "font-size", 12, int)
+    self.fontface =   util.get_default(json, "font-face", "Palatino Linotype")
+    self.fontsize =   util.get_default(json, "font-size", 10, int)
     self.spacing =    util.get_default(json, "line-spacing", 4, int)
     self.justify =    util.get_default(json, "justify", "left")
     self.x_align =    util.get_default(json, "x-align", "left")
@@ -223,7 +223,7 @@ class TestTextStuff(unittest.TestCase):
     self.assertEqual(lab_default.height, 40000)
     self.assertEqual(lab_default.color, "#000000")
     self.assertEqual(lab_default.source, "text.txt")
-    self.assertEqual(lab_default.fontface, "sans")
+    self.assertEqual(lab_default.fontface, "Palatino Linotype")
     self.assertEqual(lab_default.fontsize, 12)
     self.assertEqual(lab_default.fontweight, sysfont.STYLE_NORMAL)
     self.assertEqual(lab_default.spacing, 4)
@@ -276,6 +276,24 @@ class TestTextStuff(unittest.TestCase):
     self.assertEqual(layer.height, 30)
     # There are some transparent pixels and some of the text color. Good enough.
     self.assertEqual(layer.getextrema(), ((0, 0xAA), (0, 0xBB), (0, 0xCC), (0, 255)))
+
+  def test_antialiasing(self):
+    lab_small = TextLabel({ "color": "#FFFFFF", "font-size": 16, "font-face": "Liberation Serif" })
+    lab_large = TextLabel({ "color": "#FFFFFF", "font-size": 32, "font-face": "Liberation Serif" })
+
+    text = "This is running text, rendered both natively at 32px and then at twice the size and downscaled."
+    w,h = (150, 500)
+
+    img_small = lab_small.render((w, h), text)
+
+    img_large = lab_large.render((2*w, 2*h), text)
+    img_large = img_large.resize((w, h), Image.ANTIALIAS)
+
+    img_compare = Image.new("RGBA", (2*w, h), (0,0,0,0))
+    img_compare.paste(img_small, (0,0), mask=img_small)
+    img_compare.paste(img_large, (w,0), mask=img_large)
+    img_compare.show()
+
 
   # TODO: Test text wrapping
 

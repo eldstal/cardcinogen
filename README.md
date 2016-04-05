@@ -217,7 +217,7 @@ $ Cardcinogen.py --template fluxx/fluxx.json --deck fluxx/cards
 ```
 
 The script will generate one or more jpeg images (there can be a maximum of 69
-cards per image) named `fluxx_cards_01.jpeg`, `fluxx_cards_02.jpeg`, and
+cards per image) named `fluxx_cards_01.png`, `fluxx_cards_02.png`, and
 so on.
 
 These images can be imported as decks in Tabletop Sim.  Please note that the

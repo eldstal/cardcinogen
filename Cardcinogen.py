@@ -65,7 +65,7 @@ def main():
 
   serial = 1
   for img in tilings:
-    filename = conf.output_prefix + str(serial).zfill(2) + ".jpeg"
+    filename = conf.output_prefix + str(serial).zfill(2) + ".png"
     img.save(filename)
     serial += 1
 
