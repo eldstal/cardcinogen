@@ -236,12 +236,12 @@ like the "texts" list in either layout.
         },
         {
           "name": "logo",
-          "static": "question_mark.png"
+          "static": "question_mark.png",
           "x": 100,
           "y": 10,
           "x-align": "right",
           "y-align": "top",
-          "width": 400,
+          "width": 400
         }
       ]
     }
