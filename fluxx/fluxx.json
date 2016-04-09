@@ -9,6 +9,7 @@
               "texts": [
                   {
                       "name": "header",
+                      "static": "To play this card, do whatever it says, then place it on the discard pile.",
                       "x": 160,
                       "y": 137,
                       "width": 460,
@@ -42,7 +43,7 @@
                   },
                   {
                       "name": "spine",
-                      "x": 92,
+                      "x": 69,
                       "y": 135,
                       "width": 808,
                       "height": 100,
@@ -50,9 +51,74 @@
                       "font-face": "TeXGyreHeros-bold",
                       "font-size": 63,
                       "rotation": 90,
-                      "x-align": "center",
                       "wordwrap": false,
                       "font-weight": "bold"
+                  }
+              ]
+          },
+
+          {
+
+              "source": "keepers.json",
+              "type": "complex",
+              "front-image": "Fluxx_front_keeper.jpg",
+              "texts": [
+                  {
+                      "name": "header",
+                      "static": "To play this card, place it face up on the table in front of you.",
+                      "x": 160,
+                      "y": 137,
+                      "width": 460,
+                      "height": 600,
+                      "color": "#000000",
+                      "font-face": "Liberation Serif",
+                      "font-size": 32
+                  },
+                  {
+                      "name": "title",
+                      "x": 160,
+                      "y": 429,
+                      "width": 460,
+                      "height": 600,
+                      "line-spacing": -10,
+                      "color": "#000000",
+                      "font-face": "TeXGyreHeros-bold",
+                      "font-size": 65,
+                      "font-weight": "bold",
+                      "y-align": "bottom"
+                  },
+                  {
+                      "name": "description",
+                      "x": 160,
+                      "y": 485,
+                      "width": 460,
+                      "height": 800,
+                      "color": "#000000",
+                      "font-face": "Liberation Serif",
+                      "font-size": 32
+                  },
+                  {
+                      "name": "spine",
+                      "x": 69,
+                      "y": 135,
+                      "width": 808,
+                      "height": 100,
+                      "color": "#000000",
+                      "font-face": "TeXGyreHeros-bold",
+                      "font-size": 63,
+                      "rotation": 90,
+                      "wordwrap": false,
+                      "font-weight": "bold"
+                  }
+              ],
+              "images": [
+                  {
+                      "name": "figure",
+                      "x": 386,
+                      "y": 724,
+                      "width": 430,
+                      "x-align": "center",
+                      "y-align": "center"
                   }
               ]
           },
@@ -64,6 +130,7 @@
               "texts": [
                   {
                       "name": "header",
+                      "static": "You cannot hold this card, but must place it face up in front of you as soon as you get it. If you drew it, immediately draw another card to replace it.",
                       "x": 160,
                       "y": 137,
                       "width": 460,
@@ -97,7 +164,7 @@
                   },
                   {
                       "name": "spine",
-                      "x": 92,
+                      "x": 69,
                       "y": 135,
                       "width": 808,
                       "height": 100,
@@ -105,7 +172,6 @@
                       "font-face": "TeXGyreHeros-bold",
                       "font-size": 63,
                       "rotation": 90,
-                      "x-align": "center",
                       "wordwrap": false,
                       "font-weight": "bold"
                   }

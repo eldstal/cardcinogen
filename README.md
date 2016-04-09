@@ -189,6 +189,14 @@ on a card will be filled with a question from ```questions.json``` and the
 Any options that are valid for the simple text labels are also valid for the
 labels in a complex layout.
 
+Text labels in complex layouts can have a "static" property, allowing a default
+text for the label if it isn't specified in the contents of a card in the deck.
+This allows for example the description of how to use a Keeper in the Fluxx decks
+to be the same rather than writing the same text on each card manually.
+
+If a text label has a "static" text and a card in the deck specifies a different text
+for that label, the text from the deck is used.
+
 ## Multi-layout card games
 Games like Fluxx have multiple types of card, with different designs.
 For such games, it is possible to define multiple layouts in the same JSON file.

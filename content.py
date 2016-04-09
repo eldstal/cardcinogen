@@ -78,7 +78,9 @@ class TextLabel:
 
   def __init__(self, json):
     """ Parse out the various settings of a text label and clean them up """
-    self.source =     util.get_default(json, "source", "text.txt")
+    self.name =       util.get_default(json, "name", "text")            # Only used in complex layout
+    self.source =     util.get_default(json, "source", "text.txt")            # Optional, used by simple layout
+    self.static =     util.get_default(json, "static", None)            # Optional, used by layout.
     self.x =          util.get_default(json, "x", 10, int)
     self.y =          util.get_default(json, "y", 10, int)
     self.width =      util.get_default(json, "width", 40000, int)

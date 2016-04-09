@@ -82,6 +82,7 @@ class SimpleLayout(CardLayout):
       # Some text strings may fail to render (not fit within the label boundary).
       # Those will be rendered as None, so we draw a new text string and try again.
       while (rendered_text is None):
+
         text = content_gen.gen_text_simple(label.source)
         if (text is None):
           # End of file
@@ -117,18 +118,6 @@ class ComplexLayout(CardLayout):
   def try_render_labels(self, dimensions, texts, content_gen):
     image = Image.new("RGBA", dimensions, (0,0,0,0))
 
-    for name,label in self.textlabels.items():
-
-      text  = util.get_default(texts, name, "")
-
-      rendered_text = label.render(dimensions, text)
-      if (rendered_text is None):
-        sys.stderr.write("Failed to render sub-label %s.\n" % name)
-        rendered_labels = None
-        return None
-
-      image.paste(rendered_text, (0, 0), mask=rendered_text)
-
     for name,label in self.imagelabels.items():
 
       # Some layouts have a static image - doesn't depend on the card contents.
@@ -155,6 +144,24 @@ class ComplexLayout(CardLayout):
         return None
 
       image.paste(rendered_image, (0, 0), mask=rendered_image)
+
+    for name,label in self.textlabels.items():
+
+      # Some layouts have a static text for text labels,
+      # use that if the card text doesn't contain
+      static = ""
+      if (label.static is not None):
+        static = label.static
+
+      text  = util.get_default(texts, name, static)
+
+      rendered_text = label.render(dimensions, text)
+      if (rendered_text is None):
+        sys.stderr.write("Failed to render sub-label %s.\n" % name)
+        rendered_labels = None
+        return None
+
+      image.paste(rendered_text, (0, 0), mask=rendered_text)
 
     return image
 
