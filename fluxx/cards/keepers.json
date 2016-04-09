@@ -3,5 +3,10 @@
     "title": "The Toaster",
     "spine": "THE TOASTER",
     "figure": "toaster.png"
+  },
+  {
+    "title": "The News",
+    "spine": "THE NEWS",
+    "figure": "news.png"
   }
 ]

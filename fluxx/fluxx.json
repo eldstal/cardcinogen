@@ -184,6 +184,79 @@
                       "height": 205
                   }
               ]
+          },
+
+          {
+              "source": "goals.json",
+              "type": "complex",
+              "front-image": "Fluxx_front_goal.jpg",
+              "texts": [
+                  {
+                      "name": "header",
+                      "static": "To play this card, place it face up in the center of the table. Discard previous Goal, if any.",
+                      "x": 160,
+                      "y": 137,
+                      "width": 460,
+                      "height": 600,
+                      "color": "#000000",
+                      "font-face": "Liberation Serif",
+                      "font-size": 32
+                  },
+                  {
+                      "name": "title",
+                      "x": 160,
+                      "y": 429,
+                      "width": 460,
+                      "height": 600,
+                      "line-spacing": -10,
+                      "color": "#000000",
+                      "font-face": "TeXGyreHeros-bold",
+                      "font-size": 65,
+                      "font-weight": "bold",
+                      "y-align": "bottom"
+                  },
+                  {
+                      "name": "description",
+                      "x": 160,
+                      "y": 485,
+                      "width": 460,
+                      "height": 800,
+                      "color": "#000000",
+                      "font-face": "Liberation Serif",
+                      "font-size": 32
+                  },
+                  {
+                      "name": "spine",
+                      "x": 69,
+                      "y": 135,
+                      "width": 808,
+                      "height": 100,
+                      "color": "#000000",
+                      "font-face": "TeXGyreHeros-bold",
+                      "font-size": 63,
+                      "rotation": 90,
+                      "wordwrap": false,
+                      "font-weight": "bold"
+                  }
+              ],
+              "images": [
+                  {
+                      "name": "keeper1",
+                      "x": 260,
+                      "y": 650,
+                      "y-align": 760,
+                      "x-align": "center",
+                      "width": 205
+                  },
+                  {
+                      "name": "keeper2",
+                      "x": 490,
+                      "y": 740,
+                      "y-align": 760,
+                      "x-align": "center",
+                      "width": 205
+                  }
+              ]
           }
     ]
 }

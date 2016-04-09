@@ -1,0 +1,9 @@
+[
+  {
+    "title": "Fire Hazard",
+    "spine": "FIRE HAZARD",
+    "description": "The player with The Toaster and The News on the table wins.",
+    "keeper1": "toaster.png",
+    "keeper2": "news.png"
+  }
+]
