@@ -12,16 +12,16 @@ $ pip install -r requirements.txt
 On linux, requires font-config to locate installed fonts.
 
 The supplied templates use
-* Liberation Sans and Liberation Serif TTF fonts (https://fedorahosted.org/liberation-fonts/)
-* TexGyreHeros (https://www.fontsquirrel.com/fonts/tex-gyre-heros)
+* [Liberation Sans and Liberation Serif TTF fonts](https://fedorahosted.org/liberation-fonts/)
+* [TexGyreHeros](https://www.fontsquirrel.com/fonts/tex-gyre-heros)
 
 ## Supported Games
 Any game with cards that are identical in style but unique in text.
 
 The original purpose of the script was to generate expansions for the game
-Concept (http://boardgamegeek.com/boardgame/147151/concept), but it also works
-for Cards Against Humanity and any other game with the same type of unique-text
-cards.
+[Concept](http://boardgamegeek.com/boardgame/147151/concept), but it also works
+for [Cards Against Humanity](https://cardsagainsthumanity.com) and any other
+game with the same type of unique-text cards.
 
 Templates are included for Concept, Fluxx and CaH in the corresponding directories.
 
@@ -318,5 +318,5 @@ size as the front, because you will need it to generate a deck inside the game.
 
 
 # Acknowledgements
-Uses sysfont from python-utils (https://bitbucket.org/marcusva/python-utils)
+Uses sysfont from [python-utils](https://bitbucket.org/marcusva/python-utils)
 
