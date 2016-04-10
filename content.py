@@ -264,7 +264,11 @@ class ContentGenerator:
       if (handle is None):
         sys.stderr.write("Unable to open json file %s\n" % path)
         return None
-      self.loaded_json[filename] = json.load(handle)
+      try:
+        self.loaded_json[filename] = json.load(handle)
+      except ValueError as e:
+        sys.stderr.write("JSON error in %s: %s\n" % (path, e))
+        return None
 
     if (len(self.loaded_json[filename]) == 0):
       #End of file

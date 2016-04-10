@@ -36,7 +36,7 @@ def main():
   if (conf.output_prefix == ""):
     # Generate a nice default name for the output images
     template_name = os.path.splitext(os.path.basename(conf.template.name))[0]
-    deck_name = os.path.basename(conf.deck)
+    deck_name = os.path.basename(conf.deck.rstrip(os.sep))
     conf.output_prefix = template_name + "_" + deck_name + "_"
 
   # Keeps track of the next piece of text in each opened file.
