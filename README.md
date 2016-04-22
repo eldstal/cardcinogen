@@ -311,6 +311,10 @@ and not the card back. Make sure you also have a back image that is the same
 size as the front, because you will need it to generate a deck inside the game.
 
 
+### Running on Windows
+[Binaries](https://github.com/eldstal/cardcinogen/releases) for windows systems are available.
+Invoking Cardcinogen.exe without any options will launch a simple GUI.
+
 
 ## Future features (probably not going to happen)
 * Two-sided cards, such as in Trivial Pursuit

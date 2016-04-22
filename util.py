@@ -2,12 +2,13 @@ import unittest
 import sys
 
 from PIL import Image
+import log
 
 def get_default(dic, k, fallback, cast=None):
   retval = fallback
 
   if (k in dic): retval = dic[k]
-  #else: sys.stderr.write("Warning: Unspecified setting %s, defaulting to %s\n" % (k, fallback))
+  #else: log.log.write("Warning: Unspecified setting %s, defaulting to %s\n" % (k, fallback))
 
   if (cast is not None): retval = cast(retval)
   return retval
@@ -19,12 +20,12 @@ def default_image(path, default_dimension=(300,800), accept_dimension=None):
     loaded = Image.open(path)
     loaded.load()
   except:
-    sys.stderr.write("Unable to load image %s. Falling back to plain.\n" % path)
+    log.log.write("Unable to load image %s. Falling back to plain.\n" % path)
     return Image.new("RGBA", default_dimension, (230, 230, 255, 255))
 
   if (accept_dimension != None):
     if (loaded.size != accept_dimension):
-      sys.stderr.write("Image sizes not matching. Resizing to %d x %d\n" % accept_dimension)
+      log.log.write("Image sizes not matching. Resizing to %d x %d\n" % accept_dimension)
       return loaded.resize(accept_dimension, Image.BICUBIC)
 
   # Image is good enough as it is.

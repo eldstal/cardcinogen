@@ -5,6 +5,8 @@ import os
 import sys
 
 import util
+import log
+
 from PIL import Image
 from layout import SimpleLayout, ComplexLayout
 
@@ -35,7 +37,7 @@ class CardTemplate:
     """ Generate a single card """
 
     if (len(self.layouts) == 0):
-      sys.stderr.write("Warning: No layouts specified.")
+      log.log.write("Warning: No layouts specified.")
       return None
 
     face = self.front.copy()

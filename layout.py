@@ -3,6 +3,7 @@ import sys
 
 from PIL import Image
 
+import log
 from content import TextLabel, ImageLabel
 import util
 
@@ -56,7 +57,7 @@ class SimpleLayout(CardLayout):
     image = super().render(dimensions, content_gen)
 
     if (len(self.textlabels) + len(self.imagelabels) == 0):
-      sys.stderr.write("Warning: No text or image labels in layout.")
+      log.log.write("Warning: No text or image labels in layout.")
       return None
 
     for label in self.imagelabels:
@@ -157,7 +158,7 @@ class ComplexLayout(CardLayout):
 
       rendered_text = label.render(dimensions, text)
       if (rendered_text is None):
-        sys.stderr.write("Failed to render sub-label %s.\n" % name)
+        log.log.write("Failed to render sub-label %s.\n" % name)
         rendered_labels = None
         return None
 
@@ -169,7 +170,7 @@ class ComplexLayout(CardLayout):
     """ Generate a transparent PIL card layer with the text on it """
 
     if (len(self.textlabels) == 0):
-      sys.stderr.write("Warning: No labels in layout.")
+      log.log.write("Warning: No labels in layout.")
       return None
 
     # The static card face

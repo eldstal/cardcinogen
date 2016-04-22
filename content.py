@@ -1,5 +1,7 @@
 import unittest
 
+import log
+
 import sys
 import os
 import json
@@ -104,7 +106,7 @@ class TextLabel:
     candidate_font = sysfont.get_font(self.fontface, self.fontweight)
     if (candidate_font is None):
       # Fallback to arial
-      sys.stderr.write("Unable to locate font %s. Falling back to Arial.\n" % self.fontface)
+      log.log.write("Unable to locate font %s. Falling back to Arial.\n" % self.fontface)
       candidate_font = sysfont.get_font("arial black", self.fontweight)
 
     self.font = ImageFont.load_default()
@@ -135,7 +137,7 @@ class TextLabel:
       lines = wrap_pixel_width(text, maxwidth, self.font, linesep='\\n')
 
     if (lines is None):
-      sys.stderr.write("Warning: Unable to wrap text label \"%s\"\n" % text)
+      log.log.write("Warning: Unable to wrap text label \"%s\"\n" % text)
       return None
 
     # Render the text, one line at a time
@@ -146,11 +148,11 @@ class TextLabel:
                          spacing=self.spacing)
 
     if (label.width > maxwidth):
-      sys.stderr.write("Warning: Text label overflows max width: \"%s\"\n" % text)
+      log.log.write("Warning: Text label overflows max width: \"%s\"\n" % text)
       return None
 
     if (label.height > maxheight):
-      sys.stderr.write("Warning: Text label overflows max height: \"%s\"\n" % text)
+      log.log.write("Warning: Text label overflows max height: \"%s\"\n" % text)
       return None
 
     if (self.rotation != 0):
@@ -162,7 +164,7 @@ class TextLabel:
     if (x < 0 or y < 0 or
         x + label.width > card_dims[0] or
         y + label.height > card_dims[1]):
-      sys.stderr.write("Warning: Text label overflows card boundary: \"%s\"\n" % text)
+      log.log.write("Warning: Text label overflows card boundary: \"%s\"\n" % text)
       return None
 
     image = Image.new("RGBA", card_dims, (0,0,0,0))
@@ -222,7 +224,7 @@ class ImageLabel:
     if (x < 0 or y < 0 or
         x + image.width > card_dims[0] or
         y + image.height > card_dims[1]):
-      sys.stderr.write("Warning: Image label overflows card boundary")
+      log.log.write("Warning: Image label overflows card boundary")
 
     card = Image.new("RGBA", card_dims, (0,0,0,0))
     card.paste(image, (x,y), mask=image)
@@ -246,7 +248,7 @@ class ContentGenerator:
       path = os.path.join(self.directory, filename)
       handle = open(path, "r")
       if (handle is None):
-        sys.stderr.write("Unable to open text file %s\n" % path)
+        log.log.write("Unable to open text file %s\n" % path)
         return None
       self.loaded_texts[filename] = handle
 
@@ -262,7 +264,7 @@ class ContentGenerator:
       path = os.path.join(self.directory, filename)
       handle = open(path, "r")
       if (handle is None):
-        sys.stderr.write("Unable to open json file %s\n" % path)
+        log.log.write("Unable to open json file %s\n" % path)
         return None
       try:
         self.loaded_json[filename] = json.load(handle)
@@ -283,7 +285,7 @@ class ContentGenerator:
         image = Image.open(path)
         image.load()
       except:
-        sys.stderr.write("Unable to load image %s\n" % path)
+        log.log.write("Unable to load image %s\n" % path)
         return None
       self.loaded_images[filename] = image
 
