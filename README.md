@@ -267,7 +267,7 @@ specified size. If both are specified, the image is stretched to fit these dimen
 In the complex layout, the image's "name" property is used in the deck JSON file to
 specify the filename of the image used on each individual card:
 
-```deck/famous_people.json```
+***deck/famous_people.json***
 ```json
 [
   {
