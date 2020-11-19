@@ -59,30 +59,35 @@ def _cache_fonts_win32():
     # registry
 
     # Received all fonts from the registry.
-    for name, filename in regfonts:
+    for title, filename in regfonts:
         fonttype = os.path.splitext(filename)[1][1:].lower()
-        if name.endswith("(TrueType)"):
-            name = name[:-10].strip()
-        if name.endswith("(All Res)"):
-            name = name[:-9].strip()
-        style = STYLE_NORMAL
-        if name.find(" Bold") >= 0:
-            style |= STYLE_BOLD
-        if name.find(" Italic") >= 0 or name.find(" Oblique") >= 0:
-            style |= STYLE_ITALIC
 
-        family = name
-        for rm in ("Bold", "Italic", "Oblique"):
-            family = family.replace(rm, "")
-        family = family.lower().strip()
+        # Hack for the multiple names for one entry
+        names = title.split("&")
+        for name in names:
+          name = name.strip()
+          if name.endswith("(TrueType)"):
+              name = name[:-10].strip()
+          if name.endswith("(All Res)"):
+              name = name[:-9].strip()
+          style = STYLE_NORMAL
+          if name.find(" Bold") >= 0:
+              style |= STYLE_BOLD
+          if name.find(" Italic") >= 0 or name.find(" Oblique") >= 0:
+              style |= STYLE_ITALIC
 
-        fontpath = os.environ.get("SystemRoot", "C:\\Windows")
-        fontpath = os.path.join(fontpath, "Fonts")
-        if filename.find("\\") == -1:
-            # No path delimiter is given; we assume it to be a font in
-            # %SystemRoot%\Fonts
-            filename = os.path.join(fontpath, filename)
-        _add_font(family, name, style, fonttype, filename)
+          family = name
+          for rm in ("Bold", "Italic", "Oblique"):
+              family = family.replace(rm, "")
+          family = family.lower().strip()
+
+          fontpath = os.environ.get("SystemRoot", "C:\\Windows")
+          fontpath = os.path.join(fontpath, "Fonts")
+          if filename.find("\\") == -1:
+              # No path delimiter is given; we assume it to be a font in
+              # %SystemRoot%\Fonts
+              filename = os.path.join(fontpath, filename)
+          _add_font(family, name, style, fonttype, filename)
 
 
 def _cache_fonts_darwin():
@@ -119,9 +124,16 @@ def _cache_fonts_fontconfig():
         if len(values) > 3:
             fullnames, fullnamelangs = values[3:]
             langs = fullnamelangs.split(",")
-            offset = langs.index("fullnamelang=en")
+            try:
+                offset = langs.index("fullnamelang=en")
+            except:
+                offset = -1
+
             if offset == -1:
-                offset = langs.index("en")
+                try:
+                    offset = langs.index("en")
+                except:
+                    offset = -1
             if offset != -1:
                 # got an english name, use that one
                 name = fullnames.split(",")[offset]

@@ -1,4 +1,4 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 
 import os
 import sys
@@ -61,7 +61,7 @@ def main():
 
   parser = argparse.ArgumentParser(description="Generate decks for Tabletop Simulator")
 
-  parser.add_argument("--template", "-t", default=None, type=argparse.FileType('r'),
+  parser.add_argument("--template", "-t", default=None, type=argparse.FileType('r', encoding="utf-8-sig"),
                       help="A JSON file defining the layout of each card.")
 
   parser.add_argument("--deck", "-d", default=None,

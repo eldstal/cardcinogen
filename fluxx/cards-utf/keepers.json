@@ -1,0 +1,12 @@
+﻿[
+  {
+    "title": "烤麵包機",
+    "spine": "烤麵包機",
+    "figure": "toaster.png"
+  },
+  {
+    "title": "報紙",
+    "spine": "報紙",
+    "figure": "news.png"
+  }
+]

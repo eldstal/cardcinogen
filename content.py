@@ -102,16 +102,25 @@ class TextLabel:
     if (weight == "bold"):   self.fontweight = sysfont.STYLE_BOLD
     if (weight == "italic"): self.fontweight = sysfont.STYLE_ITALIC
 
+    fallback_fonts = [ "Arial", "liberation sans", "dejavu sans" ]
+
     # Try to auto-select a font based on the user's string
     candidate_font = sysfont.get_font(self.fontface, self.fontweight)
+
+    for font_name in fallback_fonts:
+      if (candidate_font is None):
+        # Fallback to arial
+        candidate_font = sysfont.get_font(font_name, self.fontweight)
+        if (candidate_font is not  None):
+          log.log.write("Unable to locate font %s. Falling back to %s\n" % (self.fontface, candidate_font))
+
     if (candidate_font is None):
-      # Fallback to arial
-      log.log.write("Unable to locate font %s. Falling back to Arial.\n" % self.fontface)
-      candidate_font = sysfont.get_font("arial black", self.fontweight)
+      log.log.write("Unable to locate font %s or any fallback. Unicode support will not be available.\n" % self.fontface)
 
     self.font = ImageFont.load_default()
     if (candidate_font is not None):
       self.font = ImageFont.truetype(candidate_font, self.fontsize)
+      #print(candidate_font)
 
 
   def render(self, card_dims, text):
@@ -148,11 +157,11 @@ class TextLabel:
                          spacing=self.spacing)
 
     if (label.width > maxwidth):
-      log.log.write("Warning: Text label overflows max width: \"%s\"\n" % text)
+      log.log.write("Warning: Text label overflows max width (%d > %d): \"%s\"\n" % (label.width, maxwidth, text))
       return None
 
     if (label.height > maxheight):
-      log.log.write("Warning: Text label overflows max height: \"%s\"\n" % text)
+      log.log.write("Warning: Text label overflows max height (%d > %d): \"%s\"\n" % (label.height, maxheight, text))
       return None
 
     if (self.rotation != 0):
@@ -246,7 +255,7 @@ class ContentGenerator:
     """ Fetch one line from a given text file in the deck directory """
     if (filename not in self.loaded_texts):
       path = os.path.join(self.directory, filename)
-      handle = open(path, "r")
+      handle = open(path, "r", encoding="utf-8-sig")
       if (handle is None):
         log.log.write("Unable to open text file %s\n" % path)
         return None
@@ -262,7 +271,7 @@ class ContentGenerator:
     """ Fetch an entire card (named fields) from a JSON file in the deck directory """
     if (filename not in self.loaded_json):
       path = os.path.join(self.directory, filename)
-      handle = open(path, "r")
+      handle = open(path, "r", encoding="utf-8-sig")
       if (handle is None):
         log.log.write("Unable to open json file %s\n" % path)
         return None
@@ -315,7 +324,7 @@ class TestTextStuff(unittest.TestCase):
     self.assertEqual(lab_default.color, "#000000")
     self.assertEqual(lab_default.source, "text.txt")
     self.assertEqual(lab_default.fontface, "Palatino Linotype")
-    self.assertEqual(lab_default.fontsize, 12)
+    self.assertEqual(lab_default.fontsize, 10)
     self.assertEqual(lab_default.fontweight, sysfont.STYLE_NORMAL)
     self.assertEqual(lab_default.spacing, 4)
     self.assertEqual(lab_default.justify, "left")
@@ -363,6 +372,14 @@ class TestTextStuff(unittest.TestCase):
   def test_render_text(self):
     lab_default = TextLabel({ "color": "#AABBCC" })
     layer = lab_default.render((100, 30), "Hello")
+    self.assertEqual(layer.width, 100)
+    self.assertEqual(layer.height, 30)
+    # There are some transparent pixels and some of the text color. Good enough.
+    self.assertEqual(layer.getextrema(), ((0, 0xAA), (0, 0xBB), (0, 0xCC), (0, 255)))
+
+  def test_render_unicode(self):
+    lab_default = TextLabel({ "color": "#AABBCC" })
+    layer = lab_default.render((100, 30), u"καλημέρα")
     self.assertEqual(layer.width, 100)
     self.assertEqual(layer.height, 30)
     # There are some transparent pixels and some of the text color. Good enough.
