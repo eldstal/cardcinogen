@@ -298,7 +298,7 @@ animal themes for Fluxx, written a JSON file (`fluxx.json`) and created the
 deck directory (`animals/`) with card contents.
 
 ```bash
-$ Cardcinogen.py --template fluxx/fluxx.json --deck fluxx/cards
+$ Cardcinogen.py --template fluxx/fluxx.json --deck animals/
 ```
 
 The script will generate one or more jpeg images (there can be a maximum of 69
